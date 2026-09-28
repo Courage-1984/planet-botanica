@@ -1,0 +1,15 @@
+{%- comment -%}
+  Readable label for a storefront filter value — the care-data filters store raw
+  values (difficulty 1–5, "snap", "highland"), so map them to shopper-facing words.
+  Accepts: filter (Object filter), value (Object filter_value)
+{%- endcomment -%}
+{%- case filter.param_name -%}
+  {%- when 'filter.p.m.custom.difficulty' -%}
+    {%- render 'difficulty-meter', difficulty: value.value -%}
+  {%- when 'filter.p.m.custom.trap_type' -%}
+    {%- render 'trap-label', trap: value.value -%}
+  {%- when 'filter.p.m.custom.temperature_group' -%}
+    {%- render 'climate-label', climate: value.value -%}
+  {%- else -%}
+    {{- value.label | escape -}}
+{%- endcase -%}

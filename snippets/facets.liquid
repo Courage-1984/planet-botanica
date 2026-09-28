@@ -122,7 +122,7 @@
                       {% if value.count == 0 and value.active == false %}disabled{% endif %}
                     >
                     <span class="checkbox__box" aria-hidden="true">{% render 'icon', icon: 'check' %}</span>
-                    <span class="checkbox__label">{{ value.label | escape }}</span>
+                    <span class="checkbox__label">{% render 'facet-value-label', filter: filter, value: value %}</span>
                     <span class="checkbox__count">{{ value.count }}</span>
                   </label>
                 </li>
@@ -157,7 +157,7 @@
         {%- for value in filter.active_values -%}
           <li>
             <a href="{{ value.url_to_remove }}" class="chip" data-facet-link>
-              {{- filter.label | escape }}: {{ value.label | escape -}}
+              {{- filter.label | escape }}: {% render 'facet-value-label', filter: filter, value: value -%}
               {%- render 'icon', icon: 'close' -%}
               <span class="visually-hidden">{{ 'collections.filters.remove' | t }}</span>
             </a>

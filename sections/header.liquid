@@ -1,11 +1,13 @@
 {%- liquid
   assign menu = section.settings.menu
+  assign promo = section.settings.promo_collection
+  assign scheme = section.settings.color_scheme
   if settings.logo != blank
     assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio | round
   endif
 -%}
 
-<div class="header-wrapper scheme-{{ section.settings.color_scheme }}{% if section.settings.sticky %} header-wrapper--sticky{% endif %}">
+<div class="header-wrapper scheme-{{ scheme }}{% if section.settings.sticky %} header-wrapper--sticky{% endif %}">
   <header class="header container">
     {%- comment -%} Mobile menu {%- endcomment -%}
     <details class="menu-drawer" data-menu-drawer>
@@ -13,7 +15,11 @@
         {%- render 'icon', icon: 'menu', class: 'menu-drawer__open' -%}
         {%- render 'icon', icon: 'close', class: 'menu-drawer__close' -%}
       </summary>
-      <div class="menu-drawer__panel scheme-{{ section.settings.color_scheme }}">
+      <div class="menu-drawer__panel scheme-{{ scheme }}">
+        <div class="menu-drawer__search">
+          {% render 'search-form', id: 'Drawer' %}
+        </div>
+
         <nav aria-label="{{ 'general.menu.label' | t }}">
           <ul class="menu-drawer__list" role="list">
             {%- for link in menu.links -%}
@@ -24,27 +30,32 @@
                       {{- link.title | escape -}}
                       {%- render 'icon', icon: 'chevron-down' -%}
                     </summary>
-                    <ul class="menu-drawer__sublist" role="list">
-                      <li>
+                    <div class="menu-drawer__group-body">
+                      {%- if link.type == 'catalog_link' or link.type == 'collection_link' or link.type == 'collections_link' -%}
                         <a href="{{ link.url }}" class="menu-drawer__sublink menu-drawer__sublink--all">
-                          {{- 'general.menu.view_all' | t: title: link.title -}}
+                          {{- 'general.menu.shop_all' | t -}}
                         </a>
-                      </li>
+                      {%- endif -%}
                       {%- for child in link.links -%}
-                        <li>
-                          <a href="{{ child.url }}" class="menu-drawer__sublink"{% if child.current %} aria-current="page"{% endif %}>
-                            {{- child.title | escape -}}
-                          </a>
-                          {%- if child.links != blank -%}
+                        {%- if child.links != blank -%}
+                          <details class="menu-drawer__subgroup">
+                            <summary class="menu-drawer__sublink menu-drawer__sublink--heading">
+                              {{- child.title | escape -}}
+                              {%- render 'icon', icon: 'chevron-down' -%}
+                            </summary>
                             <ul class="menu-drawer__grandlist" role="list">
                               {%- for grandchild in child.links -%}
                                 <li><a href="{{ grandchild.url }}"{% if grandchild.current %} aria-current="page"{% endif %}>{{ grandchild.title | escape }}</a></li>
                               {%- endfor -%}
                             </ul>
-                          {%- endif -%}
-                        </li>
+                          </details>
+                        {%- else -%}
+                          <a href="{{ child.url }}" class="menu-drawer__sublink"{% if child.current %} aria-current="page"{% endif %}>
+                            {{- child.title | escape -}}
+                          </a>
+                        {%- endif -%}
                       {%- endfor -%}
-                    </ul>
+                    </div>
                   </details>
                 {%- else -%}
                   <a href="{{ link.url }}" class="menu-drawer__link"{% if link.current %} aria-current="page"{% endif %}>
@@ -58,9 +69,16 @@
 
         <div class="menu-drawer__footer">
           {%- if shop.customer_accounts_enabled -%}
-            <a href="{{ routes.account_url }}" class="menu-drawer__account">
+            <a href="{{ routes.account_url }}" class="menu-drawer__utility">
               {%- render 'icon', icon: 'account' -%}
               {%- if customer -%}{{ 'customer.account.title' | t }}{%- else -%}{{ 'customer.log_in' | t }}{%- endif -%}
+            </a>
+          {%- endif -%}
+          {%- if settings.whatsapp_number != blank -%}
+            {%- assign wa_number = settings.whatsapp_number | remove: '+' | remove: ' ' -%}
+            <a href="https://wa.me/{{ wa_number }}?text={{ settings.whatsapp_message | url_encode }}" class="menu-drawer__utility" target="_blank" rel="noopener">
+              {%- render 'icon', icon: 'whatsapp' -%}
+              {{- 'general.whatsapp' | t -}}
             </a>
           {%- endif -%}
           {% render 'social-icons' %}
@@ -93,45 +111,100 @@
     {%- comment -%} Desktop navigation {%- endcomment -%}
     <nav class="header__nav" aria-label="{{ 'general.menu.label' | t }}">
       <ul class="header__menu" role="list">
+        {%- assign promo_shown = false -%}
         {%- for link in menu.links -%}
-          <li class="header__menu-item">
+          {%- liquid
+            assign has_grandchildren = false
+            for child in link.links
+              if child.links != blank
+                assign has_grandchildren = true
+                break
+              endif
+            endfor
+          -%}
+          <li class="header__menu-item{% if has_grandchildren %} header__menu-item--mega{% endif %}">
             {%- if link.links != blank -%}
               <details class="header__dropdown" data-dropdown>
-                <summary class="header__menu-link{% if link.child_active %} is-active{% endif %}">
-                  {{- link.title | escape -}}
+                <summary class="header__menu-link{% if link.active or link.child_active %} is-active{% endif %}">
+                  <span>{{ link.title | escape }}</span>
                   {%- render 'icon', icon: 'chevron-down' -%}
                 </summary>
-                {%- liquid
-                  assign has_grandchildren = false
-                  for child in link.links
-                    if child.links != blank
-                      assign has_grandchildren = true
-                      break
-                    endif
-                  endfor
-                -%}
-                <div class="header__submenu scheme-{{ section.settings.color_scheme }}{% if has_grandchildren %} header__submenu--mega{% endif %}">
-                  <ul class="header__submenu-list" role="list">
-                    {%- for child in link.links -%}
-                      <li>
-                        <a href="{{ child.url }}" class="header__submenu-link{% if child.links != blank %} header__submenu-link--heading{% endif %}"{% if child.current %} aria-current="page"{% endif %}>
-                          {{- child.title | escape -}}
-                        </a>
-                        {%- if child.links != blank -%}
-                          <ul class="header__submenu-grandlist" role="list">
-                            {%- for grandchild in child.links -%}
-                              <li><a href="{{ grandchild.url }}"{% if grandchild.current %} aria-current="page"{% endif %}>{{ grandchild.title | escape }}</a></li>
-                            {%- endfor -%}
-                          </ul>
+
+                {%- if has_grandchildren -%}
+                  <div class="header__mega scheme-{{ scheme }}">
+                    <div class="container header__mega-inner">
+                      <div class="header__mega-columns">
+                        {%- for child in link.links -%}
+                          <div class="header__mega-column{% if child.links.size > 6 %} header__mega-column--wide{% endif %}">
+                            <a href="{{ child.url }}" class="header__mega-heading"{% if child.current %} aria-current="page"{% endif %}>
+                              {{- child.title | escape -}}
+                            </a>
+                            {%- if child.links != blank -%}
+                              <ul class="header__mega-list{% if child.links.size > 6 %} header__mega-list--split{% endif %}" role="list">
+                                {%- for grandchild in child.links -%}
+                                  <li>
+                                    <a href="{{ grandchild.url }}"{% if grandchild.current %} aria-current="page"{% endif %}>
+                                      {{- grandchild.title | escape -}}
+                                    </a>
+                                  </li>
+                                {%- endfor -%}
+                              </ul>
+                            {%- endif -%}
+                          </div>
+                        {%- endfor -%}
+                        {%- if link.type == 'catalog_link' or link.type == 'collection_link' or link.type == 'collections_link' -%}
+                          <a href="{{ link.url }}" class="header__mega-all link-arrow">
+                            {{- 'general.menu.shop_all' | t -}}
+                            {%- render 'icon', icon: 'arrow-right' -%}
+                          </a>
                         {%- endif -%}
-                      </li>
-                    {%- endfor -%}
-                  </ul>
-                </div>
+                      </div>
+
+                      {%- if promo != blank and promo_shown == false -%}
+                        {%- assign promo_shown = true -%}
+                        <a href="{{ promo.url }}" class="header__promo">
+                          <span class="header__promo-media media" style="--ratio: 1.3;">
+                            {%- if promo.featured_image -%}
+                              {{
+                                promo.featured_image
+                                | image_url: width: 640
+                                | image_tag: loading: 'lazy', widths: '320, 480, 640', sizes: '300px', alt: ''
+                              }}
+                            {%- endif -%}
+                          </span>
+                          <span class="header__promo-text">
+                            {%- if section.settings.promo_heading != blank -%}
+                              <span class="header__promo-heading">{{ section.settings.promo_heading | escape }}</span>
+                            {%- endif -%}
+                            {%- if section.settings.promo_text != blank -%}
+                              <span class="header__promo-body">{{ section.settings.promo_text | escape }}</span>
+                            {%- endif -%}
+                            <span class="link-arrow">
+                              {{- section.settings.promo_link_label | default: promo.title | escape -}}
+                              {%- render 'icon', icon: 'arrow-right' -%}
+                            </span>
+                          </span>
+                        </a>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                {%- else -%}
+                  <div class="header__submenu scheme-{{ scheme }}">
+                    <ul class="header__submenu-list" role="list">
+                      {%- for child in link.links -%}
+                        <li>
+                          <a href="{{ child.url }}" class="header__submenu-link"{% if child.current %} aria-current="page"{% endif %}>
+                            {{- child.title | escape -}}
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                {%- endif -%}
               </details>
             {%- else -%}
               <a href="{{ link.url }}" class="header__menu-link{% if link.active %} is-active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>
-                {{- link.title | escape -}}
+                <span>{{ link.title | escape }}</span>
               </a>
             {%- endif -%}
           </li>
@@ -145,8 +218,8 @@
         <summary class="header__icon" aria-label="{{ 'general.search.label' | t }}">
           {%- render 'icon', icon: 'search' -%}
         </summary>
-        <div class="header__search-panel scheme-{{ section.settings.color_scheme }}">
-          <div class="container">
+        <div class="header__search-panel scheme-{{ scheme }}">
+          <div class="container header__search-inner">
             {% render 'search-form', id: 'Header' %}
           </div>
         </div>
@@ -172,7 +245,7 @@
 {% schema %}
 {
   "name": "Header",
-  "class": "section-header",
+  "class": "section-site-header",
   "enabled_on": {
     "groups": ["header"]
   },
@@ -182,7 +255,7 @@
       "id": "menu",
       "label": "Menu",
       "default": "main-menu",
-      "info": "Nested links become dropdowns. A third level turns the dropdown into a mega menu — ideal for genus → species."
+      "info": "Nested links become dropdowns. Give a menu item a third level (e.g. Shop plants → By genus → Venus flytraps) to turn it into a full-width mega menu."
     },
     {
       "type": "checkbox",
@@ -201,6 +274,37 @@
         { "value": "accent", "label": "Accent" }
       ],
       "default": "light"
+    },
+    {
+      "type": "header",
+      "content": "Mega menu promo"
+    },
+    {
+      "type": "paragraph",
+      "content": "Shown in the first mega menu. Uses the collection's image (or its first product's photo)."
+    },
+    {
+      "type": "collection",
+      "id": "promo_collection",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "promo_heading",
+      "label": "Heading",
+      "default": "New to carnivores?"
+    },
+    {
+      "type": "text",
+      "id": "promo_text",
+      "label": "Text",
+      "default": "Forgiving plants that thrive on a sunny windowsill."
+    },
+    {
+      "type": "text",
+      "id": "promo_link_label",
+      "label": "Link label",
+      "default": "Start here"
     }
   ]
 }

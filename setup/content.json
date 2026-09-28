@@ -1,30 +1,61 @@
 {
-  "_comment": "Starter pages and care-guide articles. Review with the client before launch — especially the About page (placeholder) and the delivery promises, which must match the actual courier setup.",
-  "blog": { "handle": "care-guides", "title": "Care guides" },
-  "articles": [
+  "_comment": "Starter blogs, articles and pages. Review with the client before launch — especially the About page (placeholder) and the delivery promises, which must match the actual courier setup. Articles with \"published\": false are created as drafts.",
+  "blogs": [
     {
-      "handle": "venus-flytrap-care",
-      "title": "Venus flytrap care: a South African guide",
-      "tags": ["Dionaea", "Beginner"],
-      "summary": "<p>Full sun, rainwater, the right soil and a winter rest — everything a flytrap needs to thrive in South Africa.</p>",
-      "related_query": "product_type:Dionaea",
-      "body": "<p>Venus flytraps (<em>Dionaea muscipula</em>) have a reputation for being fussy. They're not — they just have a short list of needs that are very different from ordinary houseplants. Get these right and a flytrap will live for decades.</p><h2>Light: as much sun as you can give</h2><p>Flytraps need at least four hours of direct sun a day, ideally more. A north-facing windowsill or a sunny patio is perfect. In low light the leaves grow long and floppy and the traps stay small and green. Outdoors, most of South Africa suits them well — introduce new plants to full sun over a week or two.</p><h2>Water: never from the tap</h2><p>This is the rule that matters most. Use rainwater, distilled water or reverse-osmosis water only. Minerals in tap water build up in the soil and burn the roots. In spring and summer, stand the pot in a saucer with 1–2 cm of water and top it up as it dries. In winter, keep the soil damp rather than sitting in water.</p><h2>Soil and pots</h2><p>Use a mineral-free mix of roughly equal parts peat moss and perlite — never potting soil or compost. Plastic pots are better than terracotta, which can leach minerals. Repot every year or two in early spring (September–October).</p><h2>Feeding</h2><p>Outdoors, flytraps catch plenty on their own. Indoors, an occasional live insect in one or two traps a month is enough. Never feed meat or cheese, and never fertilise the soil. Try not to trigger traps for fun — each trap only closes a handful of times before it dies back.</p><h2>Winter dormancy (June to August)</h2><p>Flytraps need a cool winter rest of about three months. As days shorten, growth slows, new leaves hug the soil and older traps go black. This is normal. Keep the plant outdoors or in a cool, bright, unheated spot, keep the soil just damp and trim off dead leaves. Plants kept warm and growing all year weaken and usually die within a couple of seasons. In frost-free coastal areas a cool, sheltered spot is usually enough; in the Highveld, protect plants from hard frost below about −5 °C.</p><h2>Common worries</h2><ul><li><strong>Traps turning black:</strong> old traps die naturally, and traps that close on something too big often blacken. Just trim them.</li><li><strong>No new traps:</strong> usually too little light.</li><li><strong>Whole plant going black in summer:</strong> check the water — tap water is the usual cause.</li></ul>"
+      "handle": "care-guides",
+      "title": "Care guides",
+      "articles": [
+        {
+          "handle": "venus-flytrap-care",
+          "title": "Venus flytrap care: a South African guide",
+          "tags": [
+            "Dionaea",
+            "Beginner"
+          ],
+          "summary": "<p>Full sun, rainwater, the right soil and a winter rest — everything a flytrap needs to thrive in South Africa.</p>",
+          "related_query": "product_type:Dionaea",
+          "body": "<p>Venus flytraps (<em>Dionaea muscipula</em>) have a reputation for being fussy. They're not — they just have a short list of needs that are very different from ordinary houseplants. Get these right and a flytrap will live for decades.</p><h2>Light: as much sun as you can give</h2><p>Flytraps need at least four hours of direct sun a day, ideally more. A north-facing windowsill or a sunny patio is perfect. In low light the leaves grow long and floppy and the traps stay small and green. Outdoors, most of South Africa suits them well — introduce new plants to full sun over a week or two.</p><h2>Water: never from the tap</h2><p>This is the rule that matters most. Use rainwater, distilled water or reverse-osmosis water only. Minerals in tap water build up in the soil and burn the roots. In spring and summer, stand the pot in a saucer with 1–2 cm of water and top it up as it dries. In winter, keep the soil damp rather than sitting in water.</p><h2>Soil and pots</h2><p>Use a mineral-free mix of roughly equal parts peat moss and perlite — never potting soil or compost. Plastic pots are better than terracotta, which can leach minerals. Repot every year or two in early spring (September–October).</p><h2>Feeding</h2><p>Outdoors, flytraps catch plenty on their own. Indoors, an occasional live insect in one or two traps a month is enough. Never feed meat or cheese, and never fertilise the soil. Try not to trigger traps for fun — each trap only closes a handful of times before it dies back.</p><h2>Winter dormancy (June to August)</h2><p>Flytraps need a cool winter rest of about three months. As days shorten, growth slows, new leaves hug the soil and older traps go black. This is normal. Keep the plant outdoors or in a cool, bright, unheated spot, keep the soil just damp and trim off dead leaves. Plants kept warm and growing all year weaken and usually die within a couple of seasons. In frost-free coastal areas a cool, sheltered spot is usually enough; in the Highveld, protect plants from hard frost below about −5 °C.</p><h2>Common worries</h2><ul><li><strong>Traps turning black:</strong> old traps die naturally, and traps that close on something too big often blacken. Just trim them.</li><li><strong>No new traps:</strong> usually too little light.</li><li><strong>Whole plant going black in summer:</strong> check the water — tap water is the usual cause.</li></ul>"
+        },
+        {
+          "handle": "cape-sundew-care",
+          "title": "Cape sundew care: South Africa's easiest carnivore",
+          "tags": [
+            "Drosera",
+            "Beginner",
+            "SA native"
+          ],
+          "summary": "<p>A native of the Western Cape, the Cape sundew is forgiving, fast-growing and a brilliant first carnivorous plant.</p>",
+          "related_query": "product_type:Drosera",
+          "body": "<p>The Cape sundew (<em>Drosera capensis</em>) grows wild in wet, sandy seeps in the Western Cape. Its long leaves are covered in glistening tentacles tipped with sticky dew. Insects land, stick, and the leaf slowly curls around them over a few hours.</p><h2>Light</h2><p>Bright light produces the best dew and red colouring. A sunny windowsill, patio or greenhouse bench is ideal. It also tolerates bright, indirect light better than most carnivores.</p><h2>Water</h2><p>Use rainwater, distilled water or reverse-osmosis water only, and keep the soil constantly moist. The tray method works well: stand the pot in 1–2 cm of water and top it up before it dries out.</p><h2>Soil</h2><p>A 1:1 mix of peat moss and perlite. No compost, no fertiliser.</p><h2>Feeding</h2><p>Sundews are brilliant at catching fruit flies and fungus gnats indoors. If your plant is outside it will feed itself.</p><h2>Flowers and seeds</h2><p>Mature plants send up tall stems of pink flowers (white in the 'Alba' form) in spring and summer. They self-pollinate and drop masses of tiny seeds, so expect seedlings in nearby pots.</p><h2>Winter</h2><p>No dormancy is needed. Growth slows in cool weather — bring plants indoors or under cover if temperatures drop below about 2 °C.</p>"
+        },
+        {
+          "handle": "water-and-soil-for-carnivorous-plants",
+          "title": "Water and soil: the two rules every carnivore grower needs",
+          "tags": [
+            "Basics"
+          ],
+          "summary": "<p>Why tap water and potting soil kill carnivorous plants — and what to use instead.</p>",
+          "related_query": "product_type:'Growing supplies' OR tag:'Coll: Beginners'",
+          "body": "<p>Almost every carnivorous plant problem comes back to water or soil. These plants evolved in bogs and seeps so poor in nutrients that they started catching insects instead. Their roots can't cope with minerals and fertiliser.</p><h2>Rule one: mineral-free water</h2><p>Use one of these:</p><ul><li><strong>Rainwater</strong> — free and ideal. If you collect from a roof into a tank, let the first rain of the season wash the roof before you store it.</li><li><strong>Distilled or deionised water</strong> — make sure it's pure, with no added fragrance or anti-scale agents.</li><li><strong>Reverse-osmosis (RO) water</strong> — from a home RO system or a water refill shop.</li></ul><p>If you have a TDS meter, aim for below 50 ppm. Most municipal tap water in South Africa is well above that, and bottled mineral water is worse.</p><h2>Rule two: nutrient-free soil</h2><p>Use sphagnum peat moss mixed with perlite, roughly half and half. Butterworts like a grittier mix with more perlite or sand; tropical pitchers prefer sphagnum moss with bark and perlite. Never use potting soil, compost, garden soil or anything with added fertiliser.</p><h2>Pots</h2><p>Use plastic or glazed pots with drainage holes. Unglazed terracotta can leach minerals into the soil over time.</p><h2>The tray method</h2><p>For flytraps, sundews and trumpet pitchers, stand the pot in a saucer holding 1–2 cm of water during the growing season. Let the tray dry out every now and then so the roots get some air. Tropical pitchers (<em>Nepenthes</em>) and butterworts should be watered from the top instead.</p>"
+        }
+      ]
     },
     {
-      "handle": "cape-sundew-care",
-      "title": "Cape sundew care: South Africa's easiest carnivore",
-      "tags": ["Drosera", "Beginner", "SA native"],
-      "summary": "<p>A native of the Western Cape, the Cape sundew is forgiving, fast-growing and a brilliant first carnivorous plant.</p>",
-      "related_query": "product_type:Drosera",
-      "body": "<p>The Cape sundew (<em>Drosera capensis</em>) grows wild in wet, sandy seeps in the Western Cape. Its long leaves are covered in glistening tentacles tipped with sticky dew. Insects land, stick, and the leaf slowly curls around them over a few hours.</p><h2>Light</h2><p>Bright light produces the best dew and red colouring. A sunny windowsill, patio or greenhouse bench is ideal. It also tolerates bright, indirect light better than most carnivores.</p><h2>Water</h2><p>Use rainwater, distilled water or reverse-osmosis water only, and keep the soil constantly moist. The tray method works well: stand the pot in 1–2 cm of water and top it up before it dries out.</p><h2>Soil</h2><p>A 1:1 mix of peat moss and perlite. No compost, no fertiliser.</p><h2>Feeding</h2><p>Sundews are brilliant at catching fruit flies and fungus gnats indoors. If your plant is outside it will feed itself.</p><h2>Flowers and seeds</h2><p>Mature plants send up tall stems of pink flowers (white in the 'Alba' form) in spring and summer. They self-pollinate and drop masses of tiny seeds, so expect seedlings in nearby pots.</p><h2>Winter</h2><p>No dormancy is needed. Growth slows in cool weather — bring plants indoors or under cover if temperatures drop below about 2 °C.</p>"
-    },
-    {
-      "handle": "water-and-soil-for-carnivorous-plants",
-      "title": "Water and soil: the two rules every carnivore grower needs",
-      "tags": ["Basics"],
-      "summary": "<p>Why tap water and potting soil kill carnivorous plants — and what to use instead.</p>",
-      "related_query": "product_type:'Growing supplies' OR tag:'Coll: Beginners'",
-      "body": "<p>Almost every carnivorous plant problem comes back to water or soil. These plants evolved in bogs and seeps so poor in nutrients that they started catching insects instead. Their roots can't cope with minerals and fertiliser.</p><h2>Rule one: mineral-free water</h2><p>Use one of these:</p><ul><li><strong>Rainwater</strong> — free and ideal. If you collect from a roof into a tank, let the first rain of the season wash the roof before you store it.</li><li><strong>Distilled or deionised water</strong> — make sure it's pure, with no added fragrance or anti-scale agents.</li><li><strong>Reverse-osmosis (RO) water</strong> — from a home RO system or a water refill shop.</li></ul><p>If you have a TDS meter, aim for below 50 ppm. Most municipal tap water in South Africa is well above that, and bottled mineral water is worse.</p><h2>Rule two: nutrient-free soil</h2><p>Use sphagnum peat moss mixed with perlite, roughly half and half. Butterworts like a grittier mix with more perlite or sand; tropical pitchers prefer sphagnum moss with bark and perlite. Never use potting soil, compost, garden soil or anything with added fertiliser.</p><h2>Pots</h2><p>Use plastic or glazed pots with drainage holes. Unglazed terracotta can leach minerals into the soil over time.</p><h2>The tray method</h2><p>For flytraps, sundews and trumpet pitchers, stand the pot in a saucer holding 1–2 cm of water during the growing season. Let the tray dry out every now and then so the roots get some air. Tropical pitchers (<em>Nepenthes</em>) and butterworts should be watered from the top instead.</p>"
+      "handle": "news",
+      "title": "News",
+      "articles": [
+        {
+          "handle": "welcome-to-planet-botanica-news",
+          "title": "Welcome to the Planet Botanica news",
+          "published": false,
+          "tags": [
+            "Nursery news"
+          ],
+          "related_query": "tag:'Coll: Beginners'",
+          "summary": "<p>A quick hello from the nursery — and what you'll find here.</p>",
+          "body": "<p><strong>Draft — edit or replace this before publishing.</strong> It shows how a News post is put together.</p><p>Use News for anything happening at the nursery: restocks of rare plants, new arrivals, market and show dates, seasonal reminders and behind-the-scenes stories from the shade-houses.</p><h2>Tips for a good post</h2><ul><li>Add a featured image — it becomes the card image on the homepage and the blog page.</li><li>Tag the post (e.g. <em>Restock</em>, <em>Events</em>, <em>Nursery news</em>) so readers can filter by topic.</li><li>Link the plants you mention in the <em>Plants in this guide</em> field at the bottom of the post editor — they show as a shoppable row under the post.</li><li>Keep the first paragraph short: it's used as the excerpt on cards.</li></ul>"
+        }
+      ]
     }
   ],
   "pages": [

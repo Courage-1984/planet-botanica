@@ -11,6 +11,20 @@
   assign form_id = 'ProductForm-' | append: section.id
 
   comment
+    One frame for every slide, so a tall photo later in the gallery can't stretch the row.
+  endcomment
+  case section.settings.media_ratio
+    when 'portrait'
+      assign gallery_ratio = 0.8
+    when 'landscape'
+      assign gallery_ratio = 1.5
+    when 'adapt'
+      assign gallery_ratio = featured_media.aspect_ratio | default: 1
+    else
+      assign gallery_ratio = 1
+  endcase
+
+  comment
     Dormancy window check (shop timezone). Handles windows that wrap the year end.
   endcomment
   assign month = 'now' | date: '%m' | plus: 0
@@ -48,7 +62,7 @@
                 data-media-id="{{ media.id }}"
                 id="Media-{{ section.id }}-{{ media.id }}"
               >
-                <div class="media" style="--ratio: {{ media.aspect_ratio | default: 1 }};">
+                <div class="media gallery__frame gallery__frame--{{ section.settings.media_fit }}" style="--ratio: {{ gallery_ratio }};">
                   {%- case media.media_type -%}
                     {%- when 'image' -%}
                       {%- liquid
@@ -419,6 +433,28 @@
   "tag": "section",
   "class": "section-main-product",
   "settings": [
+    {
+      "type": "select",
+      "id": "media_ratio",
+      "label": "Gallery shape",
+      "options": [
+        { "value": "square", "label": "Square" },
+        { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "landscape", "label": "Landscape (3:2)" },
+        { "value": "adapt", "label": "Match first image" }
+      ],
+      "default": "square"
+    },
+    {
+      "type": "select",
+      "id": "media_fit",
+      "label": "Photo fit",
+      "options": [
+        { "value": "contain", "label": "Show whole photo" },
+        { "value": "cover", "label": "Fill frame (crop)" }
+      ],
+      "default": "contain"
+    },
     {
       "type": "select",
       "id": "color_scheme",

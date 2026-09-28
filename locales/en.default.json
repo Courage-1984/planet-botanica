@@ -11,7 +11,7 @@
     "menu": {
       "label": "Main menu",
       "open": "Menu",
-      "view_all": "All {{ title }}"
+      "shop_all": "Shop all plants"
     },
     "cart": {
       "item_count": {
@@ -240,6 +240,13 @@
     "article": {
       "shop_eyebrow": "Shop this guide",
       "shop_heading": "Plants in this guide",
+      "shop_heading_post": "Plants in this post",
+      "keep_reading": "Keep reading",
+      "all_posts": "All posts",
+      "reading_time": {
+        "one": "{{ count }} min read",
+        "other": "{{ count }} min read"
+      },
       "comments": {
         "one": "{{ count }} comment",
         "other": "{{ count }} comments"

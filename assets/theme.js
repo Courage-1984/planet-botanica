@@ -132,6 +132,19 @@
     setVars();
     if ('ResizeObserver' in window) new ResizeObserver(setVars).observe(wrapper);
 
+    // Compact header + shadow once the page scrolls (sticky header only changes look, not layout).
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        wrapper.classList.toggle('is-scrolled', window.scrollY > 8);
+        ticking = false;
+      });
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true, signal });
+
     const hoverQuery = window.matchMedia('(hover: hover) and (min-width: 990px)');
     const dropdowns = [...wrapper.querySelectorAll('[data-dropdown]')];
     dropdowns.forEach((dropdown) => {

@@ -6,14 +6,14 @@ Everything the theme expects that lives in the Shopify admin rather than in them
 | --- | --- |
 | `metafields.json` | `custom.*` care-data definitions: 19 on products, 1 on collections, 1 on articles. Choice lists power filters and the quiz. |
 | `collections.json` | 18 smart collections: one per genus (by product type), Nepenthes by climate, and *Beginners / Rare / Tropicals* (by tag). |
-| `content.json` | *Care guides* blog with 3 articles, plus About / Shipping / Contact pages. |
+| `content.json` | Two blogs — *Care guides* (3 articles) and *News* (1 draft template post) — plus About / Shipping / Contact pages. Articles with `"published": false` are created as drafts. |
 | `setup-store.mjs` | Creates all of the above through the Admin GraphQL API (2026-07). Safe to re-run. |
 
 ## Moving the catalogue to the client's store
 
 Pick one:
 
-- **Transfer the development store** to the client (Partner Dashboard → Stores → Transfer ownership). Everything comes along, and the setup script only needs its `content` step.
+- **Transfer the development store** to the client (Partner Dashboard → Stores → Transfer ownership). Everything comes along — the setup script has already been run on it (care guides, menus and definitions are in place).
 - **Fresh store:** run the setup script (below), then in the dev store go to *Products → Export → All products → CSV for Excel/Numbers* and import that file into the new store. The metafield columns map automatically because the definitions match.
 
 ## Running the setup script
@@ -27,16 +27,26 @@ shopify store auth --store abc123.myshopify.com --scopes "read_products,write_pr
 # Preview, then run (or one step at a time: --only=metafields,collections,content,menus)
 SHOPIFY_STORE=abc123.myshopify.com node setup/setup-store.mjs --dry-run
 SHOPIFY_STORE=abc123.myshopify.com node setup/setup-store.mjs
-
-# Brand-new store only: replace Shopify's default Home/Catalog menus with the theme's
-SHOPIFY_STORE=abc123.myshopify.com node setup/setup-store.mjs --only=menus --force-menus
 ```
 
 PowerShell: `$env:SHOPIFY_STORE="abc123.myshopify.com"; node setup/setup-store.mjs`
 
 Prefer a token? Create a custom app with the same scopes and set `SHOPIFY_ADMIN_TOKEN=shpat_…`; the script then calls the API directly instead of going through the CLI.
 
-**Re-running is safe.** Definitions, collections, pages, articles and menus that already exist (matched by key or handle) are skipped. Existing menus are never overwritten without `--force-menus`, because menus are shared by every theme on the store.
+**Re-running is safe.** Definitions, collections, pages, articles and menus that already exist (matched by key or handle) are skipped; existing collections still get their care-guide link.
+
+**Menus** are created under theme-specific handles — `planet-botanica-main-menu` (header), `planet-botanica-footer` and `customer-care` (footer) — so Shopify's default `main-menu` / `footer`, and any other theme using them, are never touched. Edit them afterwards in *Content → Menus*; a re-run leaves your edits alone unless you pass `--force-menus`.
+
+Header menu tree (a third level turns an item into the full-width mega menu):
+
+```
+Shop plants ─┬─ By genus ── Venus flytraps · Sundews · Trumpet pitchers · … (11 genera)
+             └─ Collections ── Beginner-friendly · Rare species · Tropicals · Growing supplies
+Beginner-friendly
+Learn ── Care guides · News · Delivery & shipping
+Our story
+Contact us
+```
 
 ## Storefront filters (manual — Shopify has no API for this)
 
@@ -44,14 +54,14 @@ Install **Shopify Search & Discovery** (free), then *Filters → Add filter*:
 
 1. Availability
 2. Price
-3. Difficulty — `custom.difficulty` (number range)
+3. Difficulty — `custom.difficulty` (as a list of values: 1, 3, 5)
 4. Trap type — `custom.trap_type`
 5. Climate — `custom.temperature_group`
 6. Product type (genus)
 
-The plant-finder quiz needs filters 3, 4 and 5. It sends shoppers to URLs like
-`/collections/all?filter.p.m.custom.temperature_group=temperate&filter.p.m.custom.difficulty.lte=2`.
-Without the filters, the quiz still works but shows every plant.
+These are already set up on the development store. The plant-finder quiz needs filters 3, 4 and 5 — it sends shoppers to URLs like
+`/collections/all?filter.p.m.custom.temperature_group=temperate&filter.p.m.custom.difficulty=1&filter.p.m.custom.trap_type=snap`
+(verified: returns the 6 Venus flytraps). Without the filters, the quiz still works but shows every plant. The theme shows readable labels for these filter values (Easy / Intermediate / Expert, "Snap trap", "Highland — cool nights").
 
 In Search & Discovery, also set **Complementary products** for plants (soil, pots, kits). The product page shows them in its "Complete the setup" row.
 

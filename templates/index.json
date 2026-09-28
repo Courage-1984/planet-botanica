@@ -107,13 +107,13 @@
             "question": "How green are your thumbs?",
             "param": "filter.p.m.custom.difficulty",
             "option_1_label": "This is my first carnivore",
-            "option_1_value": "1..2",
+            "option_1_value": "1",
             "option_1_icon": "soil",
             "option_2_label": "I've kept a few alive",
-            "option_2_value": "1..3",
+            "option_2_value": "1|3",
             "option_2_icon": "leaf",
             "option_3_label": "Seasoned grower — challenge me",
-            "option_3_value": "3..5",
+            "option_3_value": "3|5",
             "option_3_icon": "shield",
             "option_4_icon": "none"
           }
@@ -244,10 +244,24 @@
       "settings": {
         "eyebrow": "Learn",
         "heading": "Care guides",
+        "blog": "care-guides",
         "post_limit": 3,
         "show_excerpt": true,
         "color_scheme": "light",
         "padding_top": 80,
+        "padding_bottom": 64
+      }
+    },
+    "news": {
+      "type": "featured-blog",
+      "settings": {
+        "eyebrow": "From the nursery",
+        "heading": "News",
+        "blog": "news",
+        "post_limit": 3,
+        "show_excerpt": true,
+        "color_scheme": "surface",
+        "padding_top": 64,
         "padding_bottom": 64
       }
     },
@@ -295,5 +309,5 @@
       }
     }
   },
-  "order": ["hero", "genera", "featured", "finder", "promise", "story", "shipping", "guides", "faq"]
+  "order": ["hero", "genera", "featured", "finder", "promise", "story", "shipping", "guides", "news", "faq"]
 }

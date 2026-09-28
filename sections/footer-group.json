@@ -16,14 +16,14 @@
           "type": "menu",
           "settings": {
             "heading": "Shop",
-            "menu": "main-menu"
+            "menu": "planet-botanica-footer"
           }
         },
         "help": {
           "type": "menu",
           "settings": {
             "heading": "Help",
-            "menu": "footer"
+            "menu": "customer-care"
           }
         },
         "contact": {

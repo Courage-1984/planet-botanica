@@ -27,9 +27,13 @@
     "header": {
       "type": "header",
       "settings": {
-        "menu": "main-menu",
+        "menu": "planet-botanica-main-menu",
         "sticky": true,
-        "color_scheme": "light"
+        "color_scheme": "light",
+        "promo_collection": "coll-beginners",
+        "promo_heading": "New to carnivores?",
+        "promo_text": "Forgiving plants that thrive on a sunny windowsill.",
+        "promo_link_label": "Start here"
       }
     }
   },

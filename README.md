@@ -15,7 +15,9 @@ A bespoke Online Store 2.0 theme for a South African carnivorous-plant nursery. 
 | **Shipping-week section** — visual Mon–Sun dispatch calendar that stays in sync with theme settings | `sections/shipping-calendar.liquid` |
 | **Free-shipping progress bar**, AJAX cart drawer, order notes | `sections/cart-drawer.liquid` |
 | **Filtering & sorting** by difficulty, trap type, light, growing spot and price (AJAX, back-button safe) | `snippets/facets.liquid`, `FacetFilters` |
-| **Predictive search** that shows botanical names | `sections/predictive-search.liquid` |
+| **Predictive search** that shows genus and origin | `sections/predictive-search.liquid` |
+| **Mega menu** (genus + collections columns, promo card), dropdowns, compact sticky header, mobile drawer with search | `sections/header.liquid` |
+| **Two blogs** — Care guides and News — with reading time, share row, "Plants in this post" and "Keep reading" | `sections/main-article.liquid` |
 | **WhatsApp** floating chat button + WhatsApp share on products | Theme settings → Social & WhatsApp |
 | **ECT Act business details** (registration no., VAT no., address) in the footer | Theme settings → Business details |
 | Care-guide blog with **"Plants in this guide"** product rows | `sections/main-article.liquid` |
@@ -62,5 +64,6 @@ The store's data model and setup: see [`setup/README.md`](setup/README.md).
 
 ## Handover docs
 
-- [`setup/README.md`](setup/README.md) — seeding the catalogue, filters, metafield reference
+- [`docs/client-guide.md`](docs/client-guide.md) — for the shop owner: adding plants and care data, writing News posts and care guides, menus, dispatch pause, theme settings, filters and quiz
+- [`setup/README.md`](setup/README.md) — store setup script, filters, metafield reference, menu tree
 - [`docs/sa-launch-checklist.md`](docs/sa-launch-checklist.md) — payments, couriers, VAT, POPIA, ECT Act, permits, QA

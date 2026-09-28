@@ -6,15 +6,14 @@
  *   metafields   custom.* care-data definitions (products, collections, articles)
  *   collections  genus + curated smart collections, published to Online Store
  *   content      Care guides blog + articles, About / Shipping / Contact pages
- *   menus        main-menu, footer, customer-care
+ *   menus        planet-botanica-main-menu, planet-botanica-footer, customer-care
  *
  * Products are not created here: the catalogue lives in the development store and
  * moves with a store transfer, or via Products → Export / Import (CSV incl. metafields).
  *
- * Safe to re-run: anything that already exists (matched by key or handle) is skipped,
- * and existing menus are left alone unless --force-menus is passed — menus are shared
- * by every theme on the store. On a brand-new store, --force-menus replaces Shopify's
- * default menus.
+ * Safe to re-run: anything that already exists (matched by key or handle) is skipped.
+ * Menus use theme-specific handles, so Shopify's default main-menu / footer are never
+ * touched; re-running leaves them as edited in the admin unless --force-menus is passed.
  *
  * Auth — either:
  *   a) Shopify CLI (recommended): run `shopify store auth` once (see setup/README.md),
@@ -206,8 +205,26 @@ async function setupCollections(publicationId) {
   const { collections } = await readJson('collections.json');
 
   for (const collection of collections) {
-    if (!DRY_RUN && (await findByHandle('collections', collection.handle))) {
-      log(`  • exists  ${collection.handle}`);
+    const existing = DRY_RUN ? null : await findByHandle('collections', collection.handle);
+    if (existing) {
+      // Still attach the care-guide link, so re-runs keep collections in step with collections.json.
+      if (collection.care_guide_link) {
+        await mutate(
+          `care guide link ${collection.handle}`,
+          `mutation ($metafields: [MetafieldsSetInput!]!) {
+            metafieldsSet(metafields: $metafields) { userErrors { field message } }
+          }`,
+          {
+            metafields: [
+              { ownerId: existing.id, namespace: NAMESPACE, key: 'care_guide_link', type: 'single_line_text_field', value: collection.care_guide_link },
+            ],
+          },
+          'metafieldsSet'
+        );
+        log(`  • exists  ${collection.handle} (care guide link set)`);
+      } else {
+        log(`  • exists  ${collection.handle}`);
+      }
       continue;
     }
 
@@ -261,83 +278,9 @@ async function setupContent() {
   log('\n▸ Blog, articles & pages');
   const content = await readJson('content.json');
 
-  // Blog
-  let blog = DRY_RUN ? { id: 'dry-run' } : await findByHandle('blogs', content.blog.handle);
-  if (DRY_RUN) {
-    log(`  [dry-run] blog ${content.blog.handle}`);
-  } else if (!blog) {
-    const result = await mutate(
-      `blog ${content.blog.handle}`,
-      `mutation ($blog: BlogCreateInput!) { blogCreate(blog: $blog) { blog { id handle } userErrors { field message } } }`,
-      { blog: { title: content.blog.title, handle: content.blog.handle } },
-      'blogCreate'
-    );
-    blog = result?.blog;
-    log(`  ✓ created blog ${content.blog.handle}`);
-  } else {
-    log(`  • exists  blog ${content.blog.handle}`);
-  }
-
-  // Articles
-  for (const article of content.articles) {
-    let existing = null;
-    if (!DRY_RUN) {
-      const data = await gql(
-        `query ($q: String!) { articles(first: 5, query: $q) { nodes { id handle blog { id } } } }`,
-        { q: `handle:${article.handle}` }
-      );
-      existing = data.articles.nodes.find((a) => a.handle === article.handle && a.blog.id === blog.id);
-    }
-
-    let articleId = existing?.id;
-    if (existing) {
-      log(`  • exists  article ${article.handle}`);
-    } else {
-      const result = await mutate(
-        `article ${article.handle}`,
-        `mutation ($article: ArticleCreateInput!) {
-          articleCreate(article: $article) { article { id } userErrors { field message code } }
-        }`,
-        {
-          article: {
-            blogId: blog.id,
-            title: article.title,
-            handle: article.handle,
-            body: article.body,
-            summary: article.summary,
-            tags: article.tags,
-            author: { name: 'Planet Botanica' },
-            isPublished: true,
-          },
-        },
-        'articleCreate'
-      );
-      articleId = result?.article?.id;
-      if (articleId) log(`  ✓ created article ${article.handle}`);
-    }
-
-    // "Plants in this guide": the first few products matching the article's query.
-    if (articleId && article.related_query && !DRY_RUN) {
-      const data = await gql(
-        `query ($q: String!) { products(first: 6, query: $q, sortKey: TITLE) { nodes { id } } }`,
-        { q: `${article.related_query} AND status:active` }
-      );
-      const ids = data.products.nodes.map((p) => p.id);
-      if (ids.length) {
-        await mutate(
-          `related products ${article.handle}`,
-          `mutation ($metafields: [MetafieldsSetInput!]!) {
-            metafieldsSet(metafields: $metafields) { userErrors { field message } }
-          }`,
-          {
-            metafields: [
-              { ownerId: articleId, namespace: NAMESPACE, key: 'related_products', type: 'list.product_reference', value: JSON.stringify(ids) },
-            ],
-          },
-          'metafieldsSet'
-        );
-      }
-    }
+  for (const blogConfig of content.blogs) {
+    const blog = await ensureBlog(blogConfig);
+    for (const article of blogConfig.articles || []) await ensureArticle(blog, article);
   }
 
   // Pages
@@ -364,9 +307,92 @@ async function setupContent() {
   }
 }
 
+async function ensureBlog({ handle, title }) {
+  if (DRY_RUN) {
+    log(`  [dry-run] blog ${handle}`);
+    return { id: 'dry-run' };
+  }
+  const existing = await findByHandle('blogs', handle);
+  if (existing) {
+    log(`  • exists  blog ${handle}`);
+    return existing;
+  }
+  const result = await mutate(
+    `blog ${handle}`,
+    `mutation ($blog: BlogCreateInput!) { blogCreate(blog: $blog) { blog { id handle } userErrors { field message } } }`,
+    { blog: { title, handle } },
+    'blogCreate'
+  );
+  log(`  ✓ created blog ${handle}`);
+  return result?.blog;
+}
+
+// Creates the article (published unless "published": false) and links its "Plants in this guide".
+async function ensureArticle(blog, article) {
+  const draft = article.published === false;
+  let existing = null;
+  if (!DRY_RUN) {
+    const data = await gql(
+      `query ($q: String!) { articles(first: 5, query: $q) { nodes { id handle blog { id } } } }`,
+      { q: `handle:${article.handle}` }
+    );
+    existing = data.articles.nodes.find((a) => a.handle === article.handle && a.blog.id === blog.id);
+  }
+
+  let articleId = existing?.id;
+  if (existing) {
+    log(`  • exists  article ${article.handle}`);
+  } else {
+    const result = await mutate(
+      `article ${article.handle}${draft ? ' (draft)' : ''}`,
+      `mutation ($article: ArticleCreateInput!) {
+        articleCreate(article: $article) { article { id } userErrors { field message code } }
+      }`,
+      {
+        article: {
+          blogId: blog.id,
+          title: article.title,
+          handle: article.handle,
+          body: article.body,
+          summary: article.summary,
+          tags: article.tags,
+          author: { name: 'Planet Botanica' },
+          isPublished: !draft,
+        },
+      },
+      'articleCreate'
+    );
+    articleId = result?.article?.id;
+    if (articleId) log(`  ✓ created article ${article.handle}${draft ? ' (draft)' : ''}`);
+  }
+
+  // "Plants in this guide": the first few products matching the article's query.
+  if (articleId && article.related_query && !DRY_RUN) {
+    const data = await gql(
+      `query ($q: String!) { products(first: 6, query: $q, sortKey: TITLE) { nodes { id } } }`,
+      { q: `${article.related_query} AND status:active` }
+    );
+    const ids = data.products.nodes.map((p) => p.id);
+    if (ids.length) {
+      await mutate(
+        `related products ${article.handle}`,
+        `mutation ($metafields: [MetafieldsSetInput!]!) {
+          metafieldsSet(metafields: $metafields) { userErrors { field message } }
+        }`,
+        {
+          metafields: [
+            { ownerId: articleId, namespace: NAMESPACE, key: 'related_products', type: 'list.product_reference', value: JSON.stringify(ids) },
+          ],
+        },
+        'metafieldsSet'
+      );
+    }
+  }
+}
+
 async function setupMenus() {
   log('\n▸ Menus');
-  if (DRY_RUN) return log('  [dry-run] main-menu, footer, customer-care');
+  if (DRY_RUN) return log('  [dry-run] planet-botanica-main-menu, planet-botanica-footer, customer-care');
 
   const resource = async (connection, type, handle, title, path) => {
     const node = await findByHandle(connection, handle);
@@ -390,27 +416,54 @@ async function setupMenus() {
     ['drosophyllum', 'Dewy pines'],
   ];
 
+  // Theme-specific handles, so Shopify's default main-menu / footer (and any other
+  // theme using them) are never touched. The theme's header and footer point here.
   const menus = [
     {
-      handle: 'main-menu',
-      title: 'Main menu',
+      handle: 'planet-botanica-main-menu',
+      title: 'Planet Botanica — main menu',
+      // Three levels under "Shop plants" make the header render it as a mega menu.
       items: [
         {
           title: 'Shop plants',
           type: 'CATALOG',
           url: '/collections/all',
-          items: await Promise.all(genera.map(([handle, title]) => collection(handle, title))),
+          items: [
+            {
+              title: 'By genus',
+              type: 'COLLECTIONS',
+              url: '/collections',
+              items: await Promise.all(genera.map(([handle, title]) => collection(handle, title))),
+            },
+            {
+              title: 'Collections',
+              type: 'COLLECTIONS',
+              url: '/collections',
+              items: [
+                await collection('coll-beginners', 'Beginner-friendly'),
+                await collection('coll-rare-species', 'Rare species'),
+                await collection('coll-tropicals', 'Tropicals'),
+                await collection('growing-supplies', 'Growing supplies'),
+              ],
+            },
+          ],
         },
         await collection('coll-beginners', 'Beginner-friendly'),
-        await collection('coll-rare-species', 'Rare species'),
-        await collection('growing-supplies', 'Supplies'),
-        await blog('care-guides', 'Care guides'),
-        await page('shipping-policy', 'Delivery'),
+        {
+          ...(await blog('care-guides', 'Learn')),
+          items: [
+            await blog('care-guides', 'Care guides'),
+            await blog('news', 'News'),
+            await page('shipping-policy', 'Delivery & shipping'),
+          ],
+        },
+        await page('about', 'Our story'),
+        await page('contact', 'Contact us'),
       ],
     },
     {
-      handle: 'footer',
-      title: 'Footer menu',
+      handle: 'planet-botanica-footer',
+      title: 'Planet Botanica — footer',
       items: [
         { title: 'All plants', type: 'CATALOG', url: '/collections/all' },
         await collection('coll-beginners', 'Beginner-friendly'),
@@ -425,6 +478,7 @@ async function setupMenus() {
       items: [
         await page('shipping-policy', 'Shipping & delivery'),
         await blog('care-guides', 'Care guides'),
+        await blog('news', 'News'),
         await page('about', 'Our story'),
         await page('contact', 'Contact us'),
       ],

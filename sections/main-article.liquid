@@ -1,4 +1,9 @@
-{%- assign related_products = article.metafields.custom.related_products.value -%}
+{%- liquid
+  assign related_products = article.metafields.custom.related_products.value
+  assign word_count = article.content | strip_html | split: ' ' | size
+  assign minutes = word_count | divided_by: 200.0 | ceil | at_least: 1
+  assign share_url = request.origin | append: article.url
+-%}
 
 <article class="section scheme-{{ section.settings.color_scheme }}" style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;">
   <div class="container container--narrow">
@@ -9,6 +14,7 @@
       <h1 class="h1">{{ article.title | escape }}</h1>
       <p class="eyebrow">
         <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: format: 'date' }}</time>
+        · {{ 'blogs.article.reading_time' | t: count: minutes }}
         {%- if section.settings.show_author %} · {{ article.author }}{% endif -%}
       </p>
     </header>
@@ -43,6 +49,31 @@
         {%- endfor -%}
       </ul>
     {%- endif -%}
+
+    <share-button class="share article-share">
+      <span class="share__label">{{ 'products.product.share' | t }}</span>
+      <a
+        class="share__link"
+        href="https://wa.me/?text={{ article.title | append: ' ' | append: share_url | url_encode }}"
+        target="_blank"
+        rel="noopener"
+      >
+        {%- render 'icon', icon: 'whatsapp' -%}
+        <span class="visually-hidden">WhatsApp</span>
+      </a>
+      <a
+        class="share__link"
+        href="https://www.facebook.com/sharer/sharer.php?u={{ share_url | url_encode }}"
+        target="_blank"
+        rel="noopener"
+      >
+        {%- render 'icon', icon: 'facebook' -%}
+        <span class="visually-hidden">Facebook</span>
+      </a>
+      <button type="button" class="share__link" data-copy-url="{{ share_url }}">
+        <span data-copy-label>{{ 'products.product.copy_link' | t }}</span>
+      </button>
+    </share-button>
   </div>
 
   {%- if related_products != blank -%}
@@ -50,12 +81,50 @@
       <div class="section-header">
         <div>
           <p class="eyebrow">{{ 'blogs.article.shop_eyebrow' | t }}</p>
-          <h2 class="h2">{{ 'blogs.article.shop_heading' | t }}</h2>
+          <h2 class="h2">
+            {%- if blog.handle == 'care-guides' -%}
+              {{ 'blogs.article.shop_heading' | t }}
+            {%- else -%}
+              {{ 'blogs.article.shop_heading_post' | t }}
+            {%- endif -%}
+          </h2>
         </div>
       </div>
       <ul class="grid grid--products grid--scroll" role="list" style="--cols: 4;">
         {%- for product in related_products limit: 8 -%}
           <li>{% render 'product-card', card_product: product, section_id: section.id %}</li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
+
+  {%- liquid
+    assign more_count = 0
+    for other in blog.articles limit: 4
+      if other.id != article.id
+        assign more_count = more_count | plus: 1
+      endif
+    endfor
+  -%}
+  {%- if more_count > 0 -%}
+    <div class="container article-more">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">{{ blog.title | escape }}</p>
+          <h2 class="h2">{{ 'blogs.article.keep_reading' | t }}</h2>
+        </div>
+        <a href="{{ blog.url }}" class="link-arrow">
+          {{- 'blogs.article.all_posts' | t -}}
+          {%- render 'icon', icon: 'arrow-right' -%}
+        </a>
+      </div>
+      <ul class="grid grid--scroll" role="list" style="--cols: 3;">
+        {%- assign shown = 0 -%}
+        {%- for other in blog.articles limit: 4 -%}
+          {%- if other.id != article.id and shown < 3 -%}
+            {%- assign shown = shown | plus: 1 -%}
+            <li>{% render 'article-card', article: other, show_excerpt: false %}</li>
+          {%- endif -%}
         {%- endfor -%}
       </ul>
     </div>
