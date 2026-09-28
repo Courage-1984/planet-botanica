@@ -1,0 +1,89 @@
+{%- comment -%}
+  Rendered once in layout/theme.liquid and re-rendered through the Section
+  Rendering API; JS swaps the [data-render-section="cart-drawer"] region.
+{%- endcomment -%}
+
+{%- liquid
+  assign has_live_plant = false
+  for item in cart.items
+    if item.product.tags contains settings.plant_tag
+      assign has_live_plant = true
+      break
+    endif
+  endfor
+-%}
+
+<cart-drawer class="drawer" id="CartDrawer">
+  <div class="drawer__overlay" data-drawer-close></div>
+  <div
+    class="drawer__panel scheme-light"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="CartDrawerTitle"
+    tabindex="-1"
+  >
+    <div class="drawer__inner" data-render-section="cart-drawer">
+      <header class="drawer__header">
+        <h2 id="CartDrawerTitle" class="drawer__title">
+          {{- 'cart.general.title' | t -}}
+          {%- if cart.item_count > 0 %} <span class="drawer__count">({{ cart.item_count }})</span>{% endif -%}
+        </h2>
+        <button type="button" class="drawer__close" data-drawer-close aria-label="{{ 'general.close' | t }}">
+          {%- render 'icon', icon: 'close' -%}
+        </button>
+      </header>
+
+      {%- if cart.item_count > 0 -%}
+        {% render 'free-shipping-bar' %}
+
+        <cart-items class="drawer__body">
+          <ul class="cart-lines" role="list">
+            {%- for item in cart.items -%}
+              {% render 'cart-line', item: item, index: forloop.index %}
+            {%- endfor -%}
+          </ul>
+          <p class="form-error" role="alert" data-cart-error hidden></p>
+        </cart-items>
+
+        <form action="{{ routes.cart_url }}" method="post" class="drawer__footer" id="CartDrawerForm">
+          {%- if has_live_plant -%}
+            {% render 'dispatch-notice', compact: true %}
+          {%- endif -%}
+
+          {%- if settings.cart_show_note -%}
+            <details class="cart-note">
+              <summary>{{ 'cart.general.note_toggle' | t }}</summary>
+              <label for="CartDrawerNote" class="visually-hidden">{{ 'cart.general.note' | t }}</label>
+              <textarea id="CartDrawerNote" name="note" class="field__input" rows="3" data-cart-note placeholder="{{ 'cart.general.note_placeholder' | t }}">{{ cart.note }}</textarea>
+            </details>
+          {%- endif -%}
+
+          {%- for discount in cart.cart_level_discount_applications -%}
+            <p class="cart-totals__row cart-totals__row--discount">
+              <span>{{ discount.title }}</span>
+              <span>−{{ discount.total_allocated_amount | money }}</span>
+            </p>
+          {%- endfor -%}
+
+          <p class="cart-totals__row cart-totals__row--total">
+            <span>{{ 'cart.general.subtotal' | t }}</span>
+            <span>{{ cart.total_price | money_with_currency }}</span>
+          </p>
+          <p class="cart-totals__note">{{ 'cart.general.taxes_and_shipping' | t }}</p>
+
+          <button type="submit" name="checkout" class="btn btn--primary btn--full">
+            {{- 'cart.general.checkout' | t -}}
+          </button>
+          <a href="{{ routes.cart_url }}" class="drawer__view-cart">{{ 'cart.general.view_cart' | t }}</a>
+        </form>
+      {%- else -%}
+        <div class="drawer__empty">
+          {%- render 'icon', icon: 'soil' -%}
+          <p class="h4">{{ 'cart.general.empty' | t }}</p>
+          <p>{{ 'cart.general.empty_body' | t }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">{{ 'cart.general.continue' | t }}</a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</cart-drawer>

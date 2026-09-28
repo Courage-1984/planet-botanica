@@ -1,0 +1,179 @@
+{%- assign related_products = article.metafields.plant.related_products.value -%}
+
+<article class="section scheme-{{ section.settings.color_scheme }}" style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;">
+  <div class="container container--narrow">
+    <header class="article-header">
+      <nav class="breadcrumbs" aria-label="{{ 'general.breadcrumbs' | t }}">
+        <a href="{{ blog.url }}">{{ blog.title | escape }}</a>
+      </nav>
+      <h1 class="h1">{{ article.title | escape }}</h1>
+      <p class="eyebrow">
+        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: format: 'date' }}</time>
+        {%- if section.settings.show_author %} · {{ article.author }}{% endif -%}
+      </p>
+    </header>
+  </div>
+
+  {%- if article.image -%}
+    <div class="container">
+      <div class="article-hero media" style="--ratio: {{ article.image.aspect_ratio | at_least: 1.5 }};">
+        {{
+          article.image
+          | image_url: width: 2000
+          | image_tag:
+            loading: 'eager',
+            fetchpriority: 'high',
+            widths: '375, 750, 1100, 1500, 2000',
+            sizes: '(min-width: 1320px) 1240px, 100vw',
+            alt: article.image.alt
+        }}
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="container container--narrow">
+    <div class="rte prose article-content">
+      {{ article.content }}
+    </div>
+
+    {%- if article.tags.size > 0 -%}
+      <ul class="tag-list" role="list">
+        {%- for tag in article.tags -%}
+          <li><a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="chip">{{ tag }}</a></li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+
+  {%- if related_products != blank -%}
+    <div class="container article-products">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">{{ 'blogs.article.shop_eyebrow' | t }}</p>
+          <h2 class="h2">{{ 'blogs.article.shop_heading' | t }}</h2>
+        </div>
+      </div>
+      <ul class="grid grid--products grid--scroll" role="list" style="--cols: 4;">
+        {%- for product in related_products limit: 8 -%}
+          <li>{% render 'product-card', card_product: product, section_id: section.id %}</li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
+
+  {%- if blog.comments_enabled? -%}
+    <div class="container container--narrow article-comments">
+      {%- if article.comments_count > 0 -%}
+        <h2 class="h3">{{ 'blogs.article.comments' | t: count: article.comments_count }}</h2>
+        {%- paginate article.comments by 20 -%}
+          <ul class="comments" role="list">
+            {%- for comment in article.comments -%}
+              <li class="comment" id="{{ comment.id }}">
+                <div class="rte">{{ comment.content }}</div>
+                <p class="comment__meta">{{ comment.author }} · <time datetime="{{ comment.created_at | date: '%Y-%m-%d' }}">{{ comment.created_at | date: format: 'date' }}</time></p>
+              </li>
+            {%- endfor -%}
+          </ul>
+          {% render 'pagination', paginate: paginate %}
+        {%- endpaginate -%}
+      {%- endif -%}
+
+      {%- form 'new_comment', article, class: 'comment-form' -%}
+        <h2 class="h3">{{ 'blogs.article.leave_comment' | t }}</h2>
+        {%- if form.errors -%}
+          <div class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</div>
+        {%- elsif form.posted_successfully? -%}
+          <p class="form-message form-message--success" role="status">
+            {%- if blog.moderated? -%}{{ 'blogs.article.success_moderated' | t }}{%- else -%}{{ 'blogs.article.success' | t }}{%- endif -%}
+          </p>
+        {%- endif -%}
+        <div class="form-grid">
+          <div class="field">
+            <label class="field__label" for="CommentAuthor">{{ 'blogs.article.name' | t }}</label>
+            <input class="field__input" type="text" name="comment[author]" id="CommentAuthor" value="{{ form.author }}" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label class="field__label" for="CommentEmail">{{ 'blogs.article.email' | t }}</label>
+            <input class="field__input" type="email" name="comment[email]" id="CommentEmail" value="{{ form.email }}" autocomplete="email" required>
+          </div>
+          <div class="field field--full">
+            <label class="field__label" for="CommentBody">{{ 'blogs.article.message' | t }}</label>
+            <textarea class="field__input" rows="5" name="comment[body]" id="CommentBody" required>{{ form.body }}</textarea>
+          </div>
+        </div>
+        {%- if blog.moderated? -%}
+          <p class="form-hint">{{ 'blogs.article.moderated' | t }}</p>
+        {%- endif -%}
+        <button type="submit" class="btn btn--primary">{{ 'blogs.article.post' | t }}</button>
+      {%- endform -%}
+    </div>
+  {%- endif -%}
+</article>
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": {{ article.title | json }},
+    "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+    "dateModified": {{ article.updated_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+    "author": { "@type": "Person", "name": {{ article.author | json }} },
+    "publisher": { "@type": "Organization", "name": {{ shop.name | json }} },
+    {%- if article.image %}
+      "image": [{{ article.image | image_url: width: 1200 | prepend: 'https:' | json }}],
+    {%- endif %}
+    "mainEntityOfPage": {{ request.origin | append: article.url | json }}
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "section",
+  "class": "section-main-article",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show author",
+      "default": false
+    },
+    {
+      "type": "paragraph",
+      "content": "Link plants to a guide with the article metafield plant.related_products to show a 'Plants in this guide' row."
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "surface", "label": "Light surface" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ]
+}
+{% endschema %}

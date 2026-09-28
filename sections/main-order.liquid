@@ -1,0 +1,99 @@
+<div class="section scheme-light" style="--pt: 48px; --pb: 80px;">
+  <div class="container account">
+    <header class="account__header">
+      <div>
+        <a href="{{ routes.account_url }}" class="breadcrumbs">{{ 'customer.account.return' | t }}</a>
+        <h1 class="h2">{{ 'customer.order.title' | t: name: order.name }}</h1>
+        {%- assign order_date = order.created_at | date: format: 'date_at_time' -%}
+        <p>{{ 'customer.order.date' | t: date: order_date }}</p>
+        {%- if order.cancelled -%}
+          {%- assign cancelled_date = order.cancelled_at | date: format: 'date_at_time' -%}
+          <p class="notice notice--warning">{{ 'customer.order.cancelled' | t: date: cancelled_date }} {{ order.cancel_reason_label }}</p>
+        {%- endif -%}
+      </div>
+    </header>
+
+    <div class="account__grid">
+      <section>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">{{ 'customer.order.product' | t }}</th>
+                <th scope="col">{{ 'customer.order.quantity' | t }}</th>
+                <th scope="col">{{ 'customer.order.total' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%- for line_item in order.line_items -%}
+                <tr>
+                  <td>
+                    <a href="{{ line_item.product.url }}">{{ line_item.title | escape }}</a>
+                    {%- if line_item.fulfillment -%}
+                      <p class="table__meta">
+                        {%- assign fulfilled_date = line_item.fulfillment.created_at | date: format: 'date' -%}
+                        {{ 'customer.order.fulfilled' | t: date: fulfilled_date }}
+                        {%- if line_item.fulfillment.tracking_url %}
+                          · <a href="{{ line_item.fulfillment.tracking_url }}" target="_blank" rel="noopener">{{ 'customer.order.track' | t }}</a>
+                        {%- endif -%}
+                      </p>
+                    {%- endif -%}
+                  </td>
+                  <td>{{ line_item.quantity }}</td>
+                  <td>{{ line_item.final_line_price | money }}</td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th scope="row" colspan="2">{{ 'customer.order.subtotal' | t }}</th>
+                <td>{{ order.line_items_subtotal_price | money }}</td>
+              </tr>
+              {%- for discount in order.cart_level_discount_applications -%}
+                <tr>
+                  <th scope="row" colspan="2">{{ discount.title }}</th>
+                  <td>−{{ discount.total_allocated_amount | money }}</td>
+                </tr>
+              {%- endfor -%}
+              {%- for shipping_method in order.shipping_methods -%}
+                <tr>
+                  <th scope="row" colspan="2">{{ 'customer.order.shipping' | t }} ({{ shipping_method.title }})</th>
+                  <td>{{ shipping_method.price | money }}</td>
+                </tr>
+              {%- endfor -%}
+              {%- for tax_line in order.tax_lines -%}
+                <tr>
+                  <th scope="row" colspan="2">{{ tax_line.title }} ({{ tax_line.rate | times: 100 }}%)</th>
+                  <td>{{ tax_line.price | money }}</td>
+                </tr>
+              {%- endfor -%}
+              <tr>
+                <th scope="row" colspan="2">{{ 'customer.order.total' | t }}</th>
+                <td><strong>{{ order.total_net_amount | money_with_currency }}</strong></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </section>
+
+      <aside class="account__details">
+        <h2 class="h3">{{ 'customer.order.billing' | t }}</h2>
+        <p>{{ 'customer.order.payment_status' | t }}: {{ order.financial_status_label }}</p>
+        <address>{{ order.billing_address | format_address }}</address>
+        {%- if order.shipping_address -%}
+          <h2 class="h3">{{ 'customer.order.shipping_address' | t }}</h2>
+          <p>{{ 'customer.order.fulfillment_status' | t }}: {{ order.fulfillment_status_label }}</p>
+          <address>{{ order.shipping_address | format_address }}</address>
+        {%- endif -%}
+      </aside>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Customer order",
+  "class": "section-main-order",
+  "settings": []
+}
+{% endschema %}

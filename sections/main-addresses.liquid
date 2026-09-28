@@ -1,0 +1,62 @@
+<div class="section scheme-light" style="--pt: 48px; --pb: 80px;">
+  <div class="container account">
+    <header class="account__header">
+      <div>
+        <a href="{{ routes.account_url }}" class="breadcrumbs">{{ 'customer.account.return' | t }}</a>
+        <h1 class="h2">{{ 'customer.addresses.title' | t }}</h1>
+      </div>
+    </header>
+
+    <div class="account__grid">
+      <section>
+        {%- paginate customer.addresses by 10 -%}
+          <ul class="address-list" role="list">
+            {%- for address in customer.addresses -%}
+              <li class="address-card">
+                {%- if address == customer.default_address -%}
+                  <p class="badge badge--highlight">{{ 'customer.addresses.default' | t }}</p>
+                {%- endif -%}
+                <address>{{ address | format_address }}</address>
+                <div class="address-card__actions">
+                  <details class="address-card__edit">
+                    <summary class="btn btn--secondary btn--small">{{ 'customer.addresses.edit' | t }}</summary>
+                    <address-form>
+                      {%- form 'customer_address', address, class: 'address-form' -%}
+                        {%- assign id_prefix = 'Edit' | append: address.id -%}
+                        {% render 'address-fields', form: form, id_prefix: id_prefix, address: address %}
+                        <button type="submit" class="btn btn--primary">{{ 'customer.addresses.update' | t }}</button>
+                      {%- endform -%}
+                    </address-form>
+                  </details>
+                  <form method="post" action="{{ address.url }}" class="address-card__delete">
+                    <input type="hidden" name="_method" value="delete">
+                    <button type="submit" class="btn btn--ghost btn--small">{{ 'customer.addresses.delete' | t }}</button>
+                  </form>
+                </div>
+              </li>
+            {%- endfor -%}
+          </ul>
+          {% render 'pagination', paginate: paginate %}
+        {%- endpaginate -%}
+      </section>
+
+      <aside class="account__details">
+        <h2 class="h3">{{ 'customer.addresses.add' | t }}</h2>
+        <address-form>
+          {%- form 'customer_address', customer.new_address, class: 'address-form' -%}
+            {% render 'address-fields', form: form, id_prefix: 'New' %}
+            <button type="submit" class="btn btn--primary">{{ 'customer.addresses.add' | t }}</button>
+          {%- endform -%}
+        </address-form>
+      </aside>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Customer addresses",
+  "class": "section-main-addresses",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,33 @@
+{%- comment -%}
+  Search form with optional predictive results.
+  Accepts: id (String, unique suffix), terms (String), autofocus (Boolean)
+{%- endcomment -%}
+
+<predictive-search class="search-form" data-enabled="{{ settings.predictive_search_enabled }}">
+  <form action="{{ routes.search_url }}" method="get" role="search" class="search-form__form">
+    <label for="Search-{{ id }}" class="visually-hidden">{{ 'general.search.label' | t }}</label>
+    <input
+      class="search-form__input"
+      type="search"
+      id="Search-{{ id }}"
+      name="q"
+      value="{{ terms | escape }}"
+      placeholder="{{ 'general.search.placeholder' | t }}"
+      autocomplete="off"
+      {% if settings.predictive_search_enabled %}
+        role="combobox"
+        aria-expanded="false"
+        aria-controls="PredictiveResults-{{ id }}"
+        aria-autocomplete="list"
+      {% endif %}
+      {% if autofocus %}autofocus{% endif %}
+    >
+    <input type="hidden" name="options[prefix]" value="last">
+    <button type="submit" class="search-form__submit" aria-label="{{ 'general.search.submit' | t }}">
+      {%- render 'icon', icon: 'search' -%}
+    </button>
+  </form>
+  {%- if settings.predictive_search_enabled -%}
+    <div class="predictive-search" id="PredictiveResults-{{ id }}" data-predictive-results hidden></div>
+  {%- endif -%}
+</predictive-search>

@@ -1,0 +1,207 @@
+{%- liquid
+  assign menu = section.settings.menu
+  if settings.logo != blank
+    assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio | round
+  endif
+-%}
+
+<div class="header-wrapper scheme-{{ section.settings.color_scheme }}{% if section.settings.sticky %} header-wrapper--sticky{% endif %}">
+  <header class="header container">
+    {%- comment -%} Mobile menu {%- endcomment -%}
+    <details class="menu-drawer" data-menu-drawer>
+      <summary class="header__icon menu-drawer__toggle" aria-label="{{ 'general.menu.open' | t }}">
+        {%- render 'icon', icon: 'menu', class: 'menu-drawer__open' -%}
+        {%- render 'icon', icon: 'close', class: 'menu-drawer__close' -%}
+      </summary>
+      <div class="menu-drawer__panel scheme-{{ section.settings.color_scheme }}">
+        <nav aria-label="{{ 'general.menu.label' | t }}">
+          <ul class="menu-drawer__list" role="list">
+            {%- for link in menu.links -%}
+              <li>
+                {%- if link.links != blank -%}
+                  <details class="menu-drawer__group">
+                    <summary class="menu-drawer__link">
+                      {{- link.title | escape -}}
+                      {%- render 'icon', icon: 'chevron-down' -%}
+                    </summary>
+                    <ul class="menu-drawer__sublist" role="list">
+                      <li>
+                        <a href="{{ link.url }}" class="menu-drawer__sublink menu-drawer__sublink--all">
+                          {{- 'general.menu.view_all' | t: title: link.title -}}
+                        </a>
+                      </li>
+                      {%- for child in link.links -%}
+                        <li>
+                          <a href="{{ child.url }}" class="menu-drawer__sublink"{% if child.current %} aria-current="page"{% endif %}>
+                            {{- child.title | escape -}}
+                          </a>
+                          {%- if child.links != blank -%}
+                            <ul class="menu-drawer__grandlist" role="list">
+                              {%- for grandchild in child.links -%}
+                                <li><a href="{{ grandchild.url }}"{% if grandchild.current %} aria-current="page"{% endif %}>{{ grandchild.title | escape }}</a></li>
+                              {%- endfor -%}
+                            </ul>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </details>
+                {%- else -%}
+                  <a href="{{ link.url }}" class="menu-drawer__link"{% if link.current %} aria-current="page"{% endif %}>
+                    {{- link.title | escape -}}
+                  </a>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+
+        <div class="menu-drawer__footer">
+          {%- if shop.customer_accounts_enabled -%}
+            <a href="{{ routes.account_url }}" class="menu-drawer__account">
+              {%- render 'icon', icon: 'account' -%}
+              {%- if customer -%}{{ 'customer.account.title' | t }}{%- else -%}{{ 'customer.log_in' | t }}{%- endif -%}
+            </a>
+          {%- endif -%}
+          {% render 'social-icons' %}
+        </div>
+      </div>
+    </details>
+
+    {%- comment -%} Logo {%- endcomment -%}
+    {%- if request.page_type == 'index' -%}<h1 class="header__heading">{%- endif -%}
+    <a href="{{ routes.root_url }}" class="header__logo">
+      {%- if settings.logo != blank -%}
+        {{
+          settings.logo
+          | image_url: width: 600
+          | image_tag:
+            class: 'header__logo-image',
+            widths: '150, 225, 300, 450, 600',
+            sizes: '(min-width: 750px) var(--logo-width), 60vw',
+            height: logo_height,
+            width: settings.logo_width,
+            alt: shop.name,
+            loading: 'eager'
+        }}
+      {%- else -%}
+        <span class="header__logo-text">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+    {%- if request.page_type == 'index' -%}</h1>{%- endif -%}
+
+    {%- comment -%} Desktop navigation {%- endcomment -%}
+    <nav class="header__nav" aria-label="{{ 'general.menu.label' | t }}">
+      <ul class="header__menu" role="list">
+        {%- for link in menu.links -%}
+          <li class="header__menu-item">
+            {%- if link.links != blank -%}
+              <details class="header__dropdown" data-dropdown>
+                <summary class="header__menu-link{% if link.child_active %} is-active{% endif %}">
+                  {{- link.title | escape -}}
+                  {%- render 'icon', icon: 'chevron-down' -%}
+                </summary>
+                {%- liquid
+                  assign has_grandchildren = false
+                  for child in link.links
+                    if child.links != blank
+                      assign has_grandchildren = true
+                      break
+                    endif
+                  endfor
+                -%}
+                <div class="header__submenu scheme-{{ section.settings.color_scheme }}{% if has_grandchildren %} header__submenu--mega{% endif %}">
+                  <ul class="header__submenu-list" role="list">
+                    {%- for child in link.links -%}
+                      <li>
+                        <a href="{{ child.url }}" class="header__submenu-link{% if child.links != blank %} header__submenu-link--heading{% endif %}"{% if child.current %} aria-current="page"{% endif %}>
+                          {{- child.title | escape -}}
+                        </a>
+                        {%- if child.links != blank -%}
+                          <ul class="header__submenu-grandlist" role="list">
+                            {%- for grandchild in child.links -%}
+                              <li><a href="{{ grandchild.url }}"{% if grandchild.current %} aria-current="page"{% endif %}>{{ grandchild.title | escape }}</a></li>
+                            {%- endfor -%}
+                          </ul>
+                        {%- endif -%}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}" class="header__menu-link{% if link.active %} is-active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>
+                {{- link.title | escape -}}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    {%- comment -%} Icons {%- endcomment -%}
+    <div class="header__icons">
+      <details class="header__search" data-search-toggle>
+        <summary class="header__icon" aria-label="{{ 'general.search.label' | t }}">
+          {%- render 'icon', icon: 'search' -%}
+        </summary>
+        <div class="header__search-panel scheme-{{ section.settings.color_scheme }}">
+          <div class="container">
+            {% render 'search-form', id: 'Header' %}
+          </div>
+        </div>
+      </details>
+
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{{ routes.account_url }}" class="header__icon header__icon--account">
+          {%- render 'icon', icon: 'account' -%}
+          <span class="visually-hidden">
+            {%- if customer -%}{{ 'customer.account.title' | t }}{%- else -%}{{ 'customer.log_in' | t }}{%- endif -%}
+          </span>
+        </a>
+      {%- endif -%}
+
+      <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart" data-cart-toggle>
+        {%- render 'icon', icon: 'bag' -%}
+        {% render 'cart-count-bubble' %}
+      </a>
+    </div>
+  </header>
+</div>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-header",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu",
+      "info": "Nested links become dropdowns. A third level turns the dropdown into a mega menu — ideal for genus → species."
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Sticky header",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "surface", "label": "Light surface" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "light"
+    }
+  ]
+}
+{% endschema %}

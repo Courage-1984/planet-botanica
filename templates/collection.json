@@ -1,0 +1,69 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-collection",
+      "settings": {
+        "products_per_page": 24,
+        "columns": 3,
+        "enable_filtering": true,
+        "show_description": true,
+        "show_image": false,
+        "color_scheme": "light",
+        "padding_top": 32,
+        "padding_bottom": 64
+      }
+    },
+    "finder": {
+      "type": "plant-finder",
+      "blocks": {
+        "where": {
+          "type": "question",
+          "settings": {
+            "question": "Where will your plant live?",
+            "filter": "environment",
+            "option_1_label": "A sunny windowsill",
+            "option_1_value": "Windowsill",
+            "option_1_icon": "sun",
+            "option_2_label": "Outdoors — patio or garden",
+            "option_2_value": "Outdoors",
+            "option_2_icon": "leaf",
+            "option_3_label": "A terrarium",
+            "option_3_value": "Terrarium",
+            "option_3_icon": "humidity",
+            "option_4_label": "A greenhouse",
+            "option_4_value": "Greenhouse",
+            "option_4_icon": "thermometer"
+          }
+        },
+        "experience": {
+          "type": "question",
+          "settings": {
+            "question": "How green are your thumbs?",
+            "filter": "difficulty",
+            "option_1_label": "This is my first carnivore",
+            "option_1_value": "Beginner",
+            "option_1_icon": "soil",
+            "option_2_label": "I've kept a few alive",
+            "option_2_value": "Beginner|Intermediate",
+            "option_2_icon": "leaf",
+            "option_3_label": "Seasoned grower — challenge me",
+            "option_3_value": "Intermediate|Advanced",
+            "option_3_icon": "shield",
+            "option_4_icon": "none"
+          }
+        }
+      },
+      "block_order": ["where", "experience"],
+      "settings": {
+        "eyebrow": "Still deciding?",
+        "heading": "Let us match you with a plant",
+        "text": "<p>Two questions, and we'll filter the nursery down to plants that suit your space.</p>",
+        "submit_label": "Show my matches",
+        "color_scheme": "dark",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    }
+  },
+  "order": ["main", "finder"]
+}

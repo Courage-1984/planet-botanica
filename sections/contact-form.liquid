@@ -1,0 +1,101 @@
+<div
+  class="section scheme-{{ section.settings.color_scheme }}"
+  style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="container container--narrow">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="h2">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- form 'contact', id: 'ContactForm', class: 'contact-form' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="form-message form-message--success" role="status" tabindex="-1" autofocus>
+          {%- render 'icon', icon: 'check' -%}
+          {{ 'templates.contact.form.success' | t }}
+        </p>
+      {%- elsif form.errors -%}
+        <div class="form-message form-message--error" role="alert">
+          {{ form.errors | default_errors }}
+        </div>
+      {%- endif -%}
+
+      <div class="form-grid">
+        <div class="field">
+          <label class="field__label" for="ContactForm-name">{{ 'templates.contact.form.name' | t }}</label>
+          <input class="field__input" type="text" id="ContactForm-name" name="contact[{{ 'templates.contact.form.name' | t }}]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" autocomplete="name">
+        </div>
+        <div class="field">
+          <label class="field__label" for="ContactForm-email">{{ 'templates.contact.form.email' | t }} <span aria-hidden="true">*</span></label>
+          <input class="field__input" type="email" id="ContactForm-email" name="contact[email]" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label class="field__label" for="ContactForm-phone">{{ 'templates.contact.form.phone' | t }}</label>
+          <input class="field__input" type="tel" id="ContactForm-phone" name="contact[{{ 'templates.contact.form.phone' | t }}]" value="{{ form.phone }}" autocomplete="tel" pattern="[0-9\-\+\s]*">
+        </div>
+        <div class="field">
+          <label class="field__label" for="ContactForm-order">{{ 'templates.contact.form.order' | t }}</label>
+          <input class="field__input" type="text" id="ContactForm-order" name="contact[{{ 'templates.contact.form.order' | t }}]" value="">
+        </div>
+        <div class="field field--full">
+          <label class="field__label" for="ContactForm-body">{{ 'templates.contact.form.comment' | t }} <span aria-hidden="true">*</span></label>
+          <textarea class="field__input" rows="6" id="ContactForm-body" name="contact[{{ 'templates.contact.form.comment' | t }}]" required>{{ form.body }}</textarea>
+        </div>
+      </div>
+      <p class="form-hint">{{ 'templates.contact.form.photo_hint' | t }}</p>
+      <button type="submit" class="btn btn--primary">{{ 'templates.contact.form.send' | t }}</button>
+    {%- endform -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Contact form",
+  "tag": "section",
+  "class": "section-contact-form",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Send us a message"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "surface", "label": "Light surface" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact form"
+    }
+  ]
+}
+{% endschema %}

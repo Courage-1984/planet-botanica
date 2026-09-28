@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-article",
+      "settings": {
+        "show_author": false,
+        "color_scheme": "light",
+        "padding_top": 32,
+        "padding_bottom": 64
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "The Bog Letter",
+        "text": "<p>Seasonal care reminders, restock alerts for rare plants and the odd growing tip. About once a month.</p>",
+        "color_scheme": "surface",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    }
+  },
+  "order": ["main", "newsletter"]
+}

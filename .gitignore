@@ -1,0 +1,14 @@
+# Dependencies & tooling
+node_modules/
+.shopify/
+*.log
+
+# Secrets — never commit Admin API tokens
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

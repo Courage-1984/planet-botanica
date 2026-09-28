@@ -1,0 +1,46 @@
+{%- liquid
+  assign heading_font = settings.type_heading_font
+  assign heading_font_italic = heading_font | font_modify: 'style', 'italic'
+  assign body_font = settings.type_body_font
+  assign body_font_bold = body_font | font_modify: 'weight', 'bold'
+  assign body_font_italic = body_font | font_modify: 'style', 'italic'
+  assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+-%}
+
+<style>
+  {{ heading_font | font_face: font_display: 'swap' }}
+  {{ heading_font_italic | font_face: font_display: 'swap' }}
+  {{ body_font | font_face: font_display: 'swap' }}
+  {{ body_font_bold | font_face: font_display: 'swap' }}
+  {{ body_font_italic | font_face: font_display: 'swap' }}
+  {{ body_font_bold_italic | font_face: font_display: 'swap' }}
+
+  :root {
+    --font-heading: "{{ heading_font.family }}", {{ heading_font.fallback_families }};
+    --font-heading-weight: {{ heading_font.weight }};
+    --font-heading-style: {{ heading_font.style }};
+    --font-body: "{{ body_font.family }}", {{ body_font.fallback_families }};
+    --font-body-weight: {{ body_font.weight }};
+    --font-body-weight-bold: {% if body_font_bold %}{{ body_font_bold.weight }}{% else %}{{ body_font.weight | plus: 300 | at_most: 900 }}{% endif %};
+    --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+    --heading-scale: {{ settings.heading_scale | divided_by: 100.0 }};
+    --body-scale: {{ settings.body_scale | divided_by: 100.0 }};
+
+    --page-width: {{ settings.page_width }}px;
+    --radius: {{ settings.radius }}px;
+    --radius-button: {{ settings.button_radius }}px;
+    --logo-width: {{ settings.logo_width }}px;
+
+    --color-accent: {{ settings.color_accent }};
+    --color-accent-fg: {{ settings.color_accent_foreground }};
+    --color-highlight: {{ settings.color_highlight }};
+    --color-success: {{ settings.color_success }};
+
+    --light-bg: {{ settings.color_background }};
+    --light-fg: {{ settings.color_foreground }};
+    --light-surface: {{ settings.color_surface }};
+    --dark-bg: {{ settings.color_background_dark }};
+    --dark-fg: {{ settings.color_foreground_dark }};
+    --dark-surface: {{ settings.color_surface_dark }};
+  }
+</style>

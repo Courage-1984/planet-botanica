@@ -1,0 +1,298 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "height": "large",
+        "alignment": "left",
+        "position": "bottom",
+        "overlay": 35,
+        "color_scheme": "dark",
+        "eyebrow": "Nursery-grown in South Africa",
+        "heading": "Plants that <em>bite back</em>",
+        "text": "<p>Venus flytraps, sundews, pitcher plants and more — grown on rainwater, hardened for our climate and delivered to your door.</p>",
+        "button_label": "Shop all plants",
+        "button_label_2": "Beginner-friendly plants",
+        "button_link_2": "/collections/beginner-friendly"
+      }
+    },
+    "genera": {
+      "type": "collection-list",
+      "blocks": {
+        "dionaea": {
+          "type": "collection",
+          "settings": { "caption": "Dionaea", "title": "Venus flytraps" }
+        },
+        "drosera": {
+          "type": "collection",
+          "settings": { "caption": "Drosera", "title": "Sundews" }
+        },
+        "sarracenia": {
+          "type": "collection",
+          "settings": { "caption": "Sarracenia", "title": "Trumpet pitchers" }
+        },
+        "nepenthes": {
+          "type": "collection",
+          "settings": { "caption": "Nepenthes", "title": "Tropical pitchers" }
+        },
+        "pinguicula": {
+          "type": "collection",
+          "settings": { "caption": "Pinguicula", "title": "Butterworts" }
+        },
+        "utricularia": {
+          "type": "collection",
+          "settings": { "caption": "Utricularia", "title": "Bladderworts" }
+        },
+        "rarities": {
+          "type": "collection",
+          "settings": { "caption": "Cephalotus · Heliamphora", "title": "Collector's corner" }
+        },
+        "supplies": {
+          "type": "collection",
+          "settings": { "caption": "Soil · pots · kits", "title": "Growing supplies" }
+        }
+      },
+      "block_order": ["dionaea", "drosera", "sarracenia", "nepenthes", "pinguicula", "utricularia", "rarities", "supplies"],
+      "settings": {
+        "eyebrow": "Shop by genus",
+        "heading": "Meet the carnivores",
+        "columns": 4,
+        "show_count": true,
+        "show_view_all": true,
+        "color_scheme": "light",
+        "padding_top": 80,
+        "padding_bottom": 48
+      }
+    },
+    "featured": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Fresh from the bog",
+        "heading": "Beginner favourites",
+        "products_to_show": 8,
+        "columns": 4,
+        "layout": "carousel",
+        "show_view_all": true,
+        "color_scheme": "light",
+        "padding_top": 48,
+        "padding_bottom": 80
+      }
+    },
+    "finder": {
+      "type": "plant-finder",
+      "blocks": {
+        "where": {
+          "type": "question",
+          "settings": {
+            "question": "Where will your plant live?",
+            "filter": "environment",
+            "option_1_label": "A sunny windowsill",
+            "option_1_value": "Windowsill",
+            "option_1_icon": "sun",
+            "option_2_label": "Outdoors — patio or garden",
+            "option_2_value": "Outdoors",
+            "option_2_icon": "leaf",
+            "option_3_label": "A terrarium",
+            "option_3_value": "Terrarium",
+            "option_3_icon": "humidity",
+            "option_4_label": "A greenhouse",
+            "option_4_value": "Greenhouse",
+            "option_4_icon": "thermometer"
+          }
+        },
+        "experience": {
+          "type": "question",
+          "settings": {
+            "question": "How green are your thumbs?",
+            "filter": "difficulty",
+            "option_1_label": "This is my first carnivore",
+            "option_1_value": "Beginner",
+            "option_1_icon": "soil",
+            "option_2_label": "I've kept a few alive",
+            "option_2_value": "Beginner|Intermediate",
+            "option_2_icon": "leaf",
+            "option_3_label": "Seasoned grower — challenge me",
+            "option_3_value": "Intermediate|Advanced",
+            "option_3_icon": "shield",
+            "option_4_icon": "none"
+          }
+        },
+        "trap": {
+          "type": "question",
+          "settings": {
+            "question": "Which trap fascinates you most?",
+            "filter": "trap_type",
+            "option_1_label": "Snapping jaws",
+            "option_1_value": "Snap trap",
+            "option_1_icon": "trap",
+            "option_2_label": "Glistening sticky dew",
+            "option_2_value": "Flypaper",
+            "option_2_icon": "water",
+            "option_3_label": "Pitchers & pitfalls",
+            "option_3_value": "Pitfall",
+            "option_3_icon": "humidity",
+            "option_4_label": "Surprise me",
+            "option_4_icon": "leaf"
+          }
+        }
+      },
+      "block_order": ["where", "experience", "trap"],
+      "settings": {
+        "eyebrow": "Not sure where to start?",
+        "heading": "Find your carnivore",
+        "text": "<p>Three quick questions and we'll show you plants that will thrive in your space — not just survive.</p>",
+        "submit_label": "Show my plants",
+        "color_scheme": "dark",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "promise": {
+      "type": "multicolumn",
+      "blocks": {
+        "water": {
+          "type": "column",
+          "settings": {
+            "icon": "water",
+            "heading": "Rainwater raised",
+            "text": "<p>Every plant is grown on rainwater in mineral-free media — no tap-water shock when it reaches you.</p>"
+          }
+        },
+        "hardened": {
+          "type": "column",
+          "settings": {
+            "icon": "sun",
+            "heading": "Hardened for SA conditions",
+            "text": "<p>Grown outdoors or in shade-houses under South African sun, so plants settle in fast instead of sulking.</p>"
+          }
+        },
+        "help": {
+          "type": "column",
+          "settings": {
+            "icon": "chat",
+            "heading": "Care help for life",
+            "text": "<p>Stuck? Send us a photo on WhatsApp and a real grower will help you troubleshoot.</p>"
+          }
+        }
+      },
+      "block_order": ["water", "hardened", "help"],
+      "settings": {
+        "heading": "Grown right, shipped right",
+        "columns": 3,
+        "alignment": "left",
+        "color_scheme": "surface",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "story": {
+      "type": "image-with-text",
+      "settings": {
+        "image_position": "left",
+        "image_ratio": "0.8",
+        "eyebrow": "From our nursery",
+        "heading": "Grown slowly, the way nature intended",
+        "text": "<p>Replace with the nursery's story: who grows the plants, where the shade-houses are, and what got them hooked on carnivores.</p>",
+        "button_label": "Our story",
+        "button_style": "secondary",
+        "color_scheme": "light",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "shipping": {
+      "type": "shipping-calendar",
+      "blocks": {
+        "weather": {
+          "type": "fact",
+          "settings": {
+            "icon": "thermometer",
+            "heading": "Heatwave & cold-snap holds",
+            "text": "<p>If extreme weather is forecast on your route, we hold your order and let you know — your plant's health comes first.</p>"
+          }
+        },
+        "pickup": {
+          "type": "fact",
+          "settings": {
+            "icon": "map-pin",
+            "heading": "Door or pickup point",
+            "text": "<p>Choose courier delivery to your door, or collect from a pickup point or locker near you at checkout.</p>"
+          }
+        },
+        "promise": {
+          "type": "fact",
+          "settings": {
+            "icon": "shield",
+            "heading": "Arrive-alive promise",
+            "text": "<p>If a plant arrives damaged, send us a photo within 48 hours of delivery and we'll replace or refund it.</p>"
+          }
+        }
+      },
+      "block_order": ["weather", "pickup", "promise"],
+      "settings": {
+        "eyebrow": "Live plant delivery",
+        "heading": "How we ship living things",
+        "text": "<p>Plants leave the nursery early in the week and reach main centres in 1–3 working days. Regional areas can take a little longer.</p>",
+        "color_scheme": "surface",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "guides": {
+      "type": "featured-blog",
+      "settings": {
+        "eyebrow": "Learn",
+        "heading": "Care guides",
+        "post_limit": 3,
+        "show_excerpt": true,
+        "color_scheme": "light",
+        "padding_top": 80,
+        "padding_bottom": 64
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "water": {
+          "type": "question",
+          "settings": {
+            "question": "Can I water my plant with tap water?",
+            "answer": "<p>No — carnivorous plants evolved in mineral-poor bogs, and the dissolved minerals in most municipal water slowly kill them. Use rainwater, distilled water or reverse-osmosis water, and sit the pot in a shallow tray.</p>"
+          }
+        },
+        "feed": {
+          "type": "question",
+          "settings": {
+            "question": "Should I feed my plant?",
+            "answer": "<p>Outdoors, plants catch all the insects they need. Indoors, an occasional small insect in one or two traps a month is plenty. Never feed meat, and never use fertiliser in the soil.</p>"
+          }
+        },
+        "dormancy": {
+          "type": "question",
+          "settings": {
+            "question": "My flytrap went black and small in winter. Is it dying?",
+            "answer": "<p>Probably not. Venus flytraps and trumpet pitchers (Sarracenia) need a cool winter dormancy — roughly June to August in South Africa. Keep them cool and damp, trim dead leaves, and they'll regrow in spring.</p>"
+          }
+        },
+        "delivery": {
+          "type": "question",
+          "settings": {
+            "question": "Do you deliver countrywide?",
+            "answer": "<p>Yes. We courier to all major centres and most regional areas in South Africa, or you can choose a pickup point at checkout.</p>"
+          }
+        }
+      },
+      "block_order": ["water", "feed", "dormancy", "delivery"],
+      "settings": {
+        "eyebrow": "Good questions",
+        "heading": "Carnivore care, answered",
+        "text": "<p>Can't find your answer? Message us on WhatsApp — we love talking plants.</p>",
+        "enable_schema": true,
+        "color_scheme": "light",
+        "padding_top": 64,
+        "padding_bottom": 96
+      }
+    }
+  },
+  "order": ["hero", "genera", "featured", "finder", "promise", "story", "shipping", "guides", "faq"]
+}

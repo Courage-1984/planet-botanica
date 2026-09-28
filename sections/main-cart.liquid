@@ -1,0 +1,142 @@
+{%- liquid
+  assign has_live_plant = false
+  for item in cart.items
+    if item.product.tags contains settings.plant_tag
+      assign has_live_plant = true
+      break
+    endif
+  endfor
+-%}
+
+<div
+  class="section scheme-{{ section.settings.color_scheme }}"
+  style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="container">
+    <div class="main-cart" data-render-section="{{ section.id }}">
+      <header class="page-header">
+        <div class="page-header__text">
+          <h1 class="h1">{{ 'cart.general.title' | t }}</h1>
+        </div>
+      </header>
+
+      {%- if cart.item_count > 0 -%}
+        <form action="{{ routes.cart_url }}" method="post" id="CartForm" class="cart" novalidate>
+          <cart-items class="cart__items">
+            <ul class="cart-lines" role="list">
+              {%- for item in cart.items -%}
+                {% render 'cart-line', item: item, index: forloop.index %}
+              {%- endfor -%}
+            </ul>
+            <p class="form-error" role="alert" data-cart-error hidden></p>
+            <noscript>
+              <button type="submit" name="update" class="btn btn--secondary btn--small">{{ 'cart.general.update' | t }}</button>
+            </noscript>
+          </cart-items>
+
+          <aside class="cart__summary">
+            {% render 'free-shipping-bar' %}
+
+            {%- if has_live_plant -%}
+              {% render 'dispatch-notice' %}
+            {%- endif -%}
+
+            {%- if settings.cart_show_note -%}
+              <div class="field">
+                <label for="CartNote" class="field__label">{{ 'cart.general.note' | t }}</label>
+                <textarea id="CartNote" name="note" class="field__input" rows="3" data-cart-note placeholder="{{ 'cart.general.note_placeholder' | t }}">{{ cart.note }}</textarea>
+              </div>
+            {%- endif -%}
+
+            <div class="cart-totals">
+              {%- for discount in cart.cart_level_discount_applications -%}
+                <p class="cart-totals__row cart-totals__row--discount">
+                  <span>{{ discount.title }}</span>
+                  <span>−{{ discount.total_allocated_amount | money }}</span>
+                </p>
+              {%- endfor -%}
+              <p class="cart-totals__row cart-totals__row--total">
+                <span>{{ 'cart.general.subtotal' | t }}</span>
+                <span>{{ cart.total_price | money_with_currency }}</span>
+              </p>
+              <p class="cart-totals__note">{{ 'cart.general.taxes_and_shipping' | t }}</p>
+            </div>
+
+            <button type="submit" name="checkout" class="btn btn--primary btn--full">
+              {{- 'cart.general.checkout' | t -}}
+            </button>
+
+            {%- if additional_checkout_buttons and section.settings.show_additional_buttons -%}
+              <div class="cart__additional">{{ content_for_additional_checkout_buttons }}</div>
+            {%- endif -%}
+
+            <a href="{{ routes.all_products_collection_url }}" class="link-arrow cart__continue">
+              {{- 'cart.general.continue' | t -}}
+              {%- render 'icon', icon: 'arrow-right' -%}
+            </a>
+          </aside>
+        </form>
+      {%- else -%}
+        <div class="empty-state">
+          {%- render 'icon', icon: 'soil' -%}
+          <p class="h3">{{ 'cart.general.empty' | t }}</p>
+          <p>{{ 'cart.general.empty_body' | t }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">{{ 'cart.general.continue' | t }}</a>
+          {%- if shop.customer_accounts_enabled and customer == null -%}
+            <p class="empty-state__login">
+              {{ 'cart.general.login_html' | t: link: routes.account_login_url }}
+            </p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "section",
+  "class": "section-main-cart",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_additional_buttons",
+      "label": "Show express checkout buttons",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "surface", "label": "Light surface" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ]
+}
+{% endschema %}

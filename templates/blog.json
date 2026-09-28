@@ -1,0 +1,25 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "settings": {
+        "intro": "<p>Growing guides for every genus we sell — watering, light, feeding and dormancy, written for South African conditions.</p>",
+        "show_tags": true,
+        "color_scheme": "light",
+        "padding_top": 32,
+        "padding_bottom": 64
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "The Bog Letter",
+        "text": "<p>Seasonal care reminders, restock alerts for rare plants and the odd growing tip. About once a month.</p>",
+        "color_scheme": "surface",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    }
+  },
+  "order": ["main", "newsletter"]
+}

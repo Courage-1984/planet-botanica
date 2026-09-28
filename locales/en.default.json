@@ -1,0 +1,363 @@
+{
+  "general": {
+    "home": "Home",
+    "close": "Close",
+    "breadcrumbs": "Breadcrumbs",
+    "whatsapp": "Chat on WhatsApp",
+    "meta": {
+      "tagged_with": "tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "menu": {
+      "label": "Main menu",
+      "open": "Menu",
+      "view_all": "All {{ title }}"
+    },
+    "cart": {
+      "item_count": {
+        "one": "{{ count }} item in cart",
+        "other": "{{ count }} items in cart"
+      }
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous page",
+      "next": "Next page",
+      "page": "Page {{ number }}"
+    },
+    "search": {
+      "title": "Search",
+      "label": "Search",
+      "submit": "Search",
+      "placeholder": "Search plants, genera, supplies…",
+      "products": "Plants & products",
+      "suggestions": "Suggestions",
+      "page": "Page",
+      "view_all": "See all results for \"{{ terms }}\"",
+      "results_for": "Results for \"{{ terms }}\"",
+      "result_count": {
+        "one": "{{ count }} result",
+        "other": "{{ count }} results"
+      },
+      "no_results": "Nothing found for \"{{ terms }}\"",
+      "no_results_hint": "Try a common name (flytrap), a genus (Drosera) or a broader word (pitcher)."
+    }
+  },
+  "accessibility": {
+    "skip_to_content": "Skip to content"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "choose_options": "Choose options",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "unavailable_option": "(sold out)",
+      "on_sale": "Sale",
+      "include_taxes": "VAT included.",
+      "shipping_policy_html": "<a href=\"{{ link }}\">Shipping</a> calculated at checkout.",
+      "share": "Share",
+      "copy_link": "Copy link",
+      "link_copied": "Link copied",
+      "price": {
+        "from_html": "From {{ price }}",
+        "regular": "Regular price",
+        "sale": "Sale price"
+      },
+      "quantity": {
+        "label": "Quantity",
+        "decrease": "Decrease quantity",
+        "increase": "Increase quantity"
+      },
+      "media": {
+        "show": "Show image {{ index }}"
+      }
+    },
+    "inventory": {
+      "in_stock": "In stock, ready to ship",
+      "low_stock": {
+        "one": "Only {{ count }} left",
+        "other": "Only {{ count }} left"
+      },
+      "backorder": "Growing on — ships when ready",
+      "out_of_stock": "Sold out — check back soon"
+    },
+    "care": {
+      "heading": "Care sheet",
+      "difficulty": "Difficulty",
+      "light": "Light",
+      "water": "Water",
+      "soil": "Soil",
+      "humidity": "Humidity",
+      "temperature": "Temperature",
+      "dormancy": "Dormancy",
+      "trap_type": "Trap",
+      "pot_size": "Supplied as",
+      "mature_size": "Mature size",
+      "origin": "Native to",
+      "environment": "Grows best",
+      "read_guide": "Read the full care guide"
+    },
+    "dispatch": {
+      "days": "Live plants dispatch {{ days }}",
+      "today": "Order within [time] for dispatch today",
+      "next": "Order now for dispatch on [day]",
+      "weekdays": "Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday"
+    }
+  },
+  "collections": {
+    "general": {
+      "all": "Collections",
+      "care_guide": "Read the care guide",
+      "no_matches": "No plants match those filters",
+      "product_count": {
+        "one": "{{ count }} product",
+        "other": "{{ count }} products"
+      }
+    },
+    "sorting": {
+      "title": "Sort by"
+    },
+    "filters": {
+      "toggle": "Filter & sort",
+      "apply": "Apply",
+      "from": "From (R)",
+      "to": "To (R)",
+      "remove": "Remove filter",
+      "clear_all": "Clear all"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Your cart",
+      "checkout": "Check out",
+      "continue": "Continue shopping",
+      "view_cart": "View cart",
+      "update": "Update cart",
+      "subtotal": "Subtotal",
+      "taxes_and_shipping": "VAT included where applicable. Shipping calculated at checkout.",
+      "note": "Order note",
+      "note_toggle": "Add an order note",
+      "note_placeholder": "Delivery instructions, gift message…",
+      "empty": "Your cart is empty",
+      "empty_body": "Nothing's been caught yet. Browse the nursery and find something with teeth.",
+      "login_html": "Have an account? <a href=\"{{ link }}\">Log in</a> to check out faster.",
+      "error": "Something went wrong updating your cart. Please try again."
+    },
+    "line": {
+      "quantity": "Quantity for {{ product }}",
+      "decrease": "Decrease quantity for {{ product }}",
+      "increase": "Increase quantity for {{ product }}",
+      "remove": "Remove"
+    },
+    "free_shipping": {
+      "label": "Progress to free shipping",
+      "remaining_html": "You're <strong>{{ amount }}</strong> away from free shipping",
+      "unlocked": "You've unlocked free shipping"
+    }
+  },
+  "sections": {
+    "announcement": {
+      "label": "Announcements"
+    },
+    "collection_list": {
+      "view_all": "All collections",
+      "placeholder": "Collection title",
+      "count": {
+        "one": "{{ count }} plant",
+        "other": "{{ count }} plants"
+      }
+    },
+    "featured_collection": {
+      "view_all": "View all",
+      "placeholder_title": "Venus flytrap"
+    },
+    "featured_blog": {
+      "view_all": "All guides",
+      "placeholder": "Care guide title"
+    },
+    "plant_finder": {
+      "back": "Back",
+      "next": "Next",
+      "submit": "Show my plants",
+      "incomplete": "Choose an option to continue."
+    },
+    "shipping": {
+      "week_label": "Dispatch week",
+      "dispatch": "Dispatch",
+      "delivery": "Delivery",
+      "rest": "No dispatch"
+    },
+    "testimonials": {
+      "rating": "Rated {{ rating }} out of 5"
+    },
+    "newsletter": {
+      "email": "Email address",
+      "subscribe": "Subscribe",
+      "notify": "Notify me",
+      "success": "Thanks for subscribing — watch your inbox.",
+      "launch_success": "You're on the list. We'll email you the moment we open.",
+      "consent": "By subscribing you agree to receive marketing emails. Unsubscribe any time. See our"
+    },
+    "footer": {
+      "rights": "All rights reserved.",
+      "registration": "Reg. no.",
+      "vat": "VAT no.",
+      "payment_methods": "Payment methods"
+    }
+  },
+  "blogs": {
+    "general": {
+      "all": "All guides"
+    },
+    "article": {
+      "shop_eyebrow": "Shop this guide",
+      "shop_heading": "Plants in this guide",
+      "comments": {
+        "one": "{{ count }} comment",
+        "other": "{{ count }} comments"
+      },
+      "leave_comment": "Leave a comment",
+      "name": "Name",
+      "email": "Email",
+      "message": "Comment",
+      "post": "Post comment",
+      "moderated": "Comments are moderated before they appear.",
+      "success": "Thanks — your comment is live.",
+      "success_moderated": "Thanks — your comment will appear once approved."
+    }
+  },
+  "customer": {
+    "log_in": "Log in",
+    "log_out": "Log out",
+    "account": {
+      "title": "Account",
+      "greeting": "Hi {{ name }}",
+      "details": "Account details",
+      "return": "← Back to account"
+    },
+    "login": {
+      "title": "Log in",
+      "email": "Email",
+      "password": "Password",
+      "forgot": "Forgot your password?",
+      "submit": "Log in",
+      "no_account": "New here?",
+      "create": "Create an account",
+      "guest_title": "Continue as a guest",
+      "guest_continue": "Continue"
+    },
+    "recover": {
+      "title": "Reset your password",
+      "subtext": "We'll email you a link to reset your password.",
+      "submit": "Send reset link",
+      "cancel": "Cancel",
+      "success": "Check your email for a link to reset your password."
+    },
+    "register": {
+      "title": "Create an account",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "marketing": "Email me care tips and restock alerts",
+      "submit": "Create account",
+      "have_account": "Already have an account?"
+    },
+    "activate": {
+      "title": "Activate your account",
+      "subtext": "Create a password to activate your account.",
+      "confirm": "Confirm password",
+      "submit": "Activate account",
+      "decline": "Decline invitation"
+    },
+    "reset": {
+      "title": "Choose a new password",
+      "subtext": "Enter a new password for your account.",
+      "submit": "Reset password"
+    },
+    "orders": {
+      "title": "Order history",
+      "none": "You haven't placed any orders yet.",
+      "order_number": "Order",
+      "date": "Date",
+      "payment_status": "Payment",
+      "fulfillment_status": "Fulfilment",
+      "total": "Total"
+    },
+    "order": {
+      "title": "Order {{ name }}",
+      "date": "Placed on {{ date }}",
+      "cancelled": "Order cancelled on {{ date }}.",
+      "product": "Product",
+      "quantity": "Qty",
+      "total": "Total",
+      "subtotal": "Subtotal",
+      "shipping": "Shipping",
+      "fulfilled": "Shipped {{ date }}",
+      "track": "Track parcel",
+      "billing": "Billing",
+      "payment_status": "Payment status",
+      "shipping_address": "Shipping address",
+      "fulfillment_status": "Fulfilment status"
+    },
+    "addresses": {
+      "title": "Your addresses",
+      "none": "No address saved yet.",
+      "view": {
+        "one": "Manage address ({{ count }})",
+        "other": "Manage addresses ({{ count }})"
+      },
+      "default": "Default",
+      "add": "Add a new address",
+      "edit": "Edit",
+      "update": "Update address",
+      "delete": "Delete",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "company": "Company",
+      "address1": "Street address",
+      "address2": "Suburb, unit or complex",
+      "city": "City / town",
+      "zip": "Postal code",
+      "country": "Country",
+      "province": "Province",
+      "phone": "Phone",
+      "set_default": "Set as default address"
+    }
+  },
+  "templates": {
+    "404": {
+      "title": "This page has been eaten",
+      "subtext": "We couldn't find what you were looking for. Try a search, or head back to the nursery."
+    },
+    "contact": {
+      "form": {
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "order": "Order number (if any)",
+        "comment": "Message",
+        "photo_hint": "Asking about a sick plant? Photos help — send them to us on WhatsApp after submitting.",
+        "send": "Send message",
+        "success": "Thanks for reaching out. We'll get back to you within one working day."
+      }
+    },
+    "password": {
+      "owner": "Store owner? Enter password",
+      "password": "Password",
+      "enter": "Enter",
+      "admin_link_html": "Are you the store owner? <a href=\"/admin\">Log in here</a>"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Here's your {{ value }} gift card for {{ shop }}!",
+      "heading": "Your {{ value }} gift card",
+      "expired": "Expired",
+      "expires_on": "Expires on {{ date }}",
+      "remaining": "{{ balance }} left",
+      "shop_link": "Start shopping",
+      "add_to_wallet": "Add to Apple Wallet",
+      "print": "Print"
+    }
+  }
+}

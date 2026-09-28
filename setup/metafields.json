@@ -1,0 +1,113 @@
+{
+  "_comment": "Plant-care metafield definitions used by the theme. Created by setup/setup-store.mjs, or by hand in Settings → Custom data → Products. Choice lists power the storefront filters and the plant-finder quiz — keep values identical to the quiz option values.",
+  "product": [
+    {
+      "key": "botanical_name",
+      "name": "Botanical name",
+      "type": "single_line_text_field",
+      "description": "Latin name incl. cultivar, e.g. Dionaea muscipula 'B52'. Shown in italics on cards and the product page."
+    },
+    {
+      "key": "difficulty",
+      "name": "Difficulty",
+      "type": "single_line_text_field",
+      "choices": ["Beginner", "Intermediate", "Advanced"],
+      "filter": true
+    },
+    {
+      "key": "trap_type",
+      "name": "Trap type",
+      "type": "single_line_text_field",
+      "choices": ["Snap trap", "Flypaper", "Pitfall", "Bladder", "Lobster-pot"],
+      "filter": true
+    },
+    {
+      "key": "light",
+      "name": "Light",
+      "type": "single_line_text_field",
+      "choices": ["Full sun", "Bright indirect", "Partial shade"],
+      "filter": true
+    },
+    {
+      "key": "environment",
+      "name": "Grows best",
+      "type": "list.single_line_text_field",
+      "choices": ["Windowsill", "Outdoors", "Terrarium", "Greenhouse"],
+      "filter": true
+    },
+    {
+      "key": "humidity",
+      "name": "Humidity",
+      "type": "single_line_text_field",
+      "choices": ["Low", "Medium", "High"]
+    },
+    {
+      "key": "water",
+      "name": "Water",
+      "type": "multi_line_text_field",
+      "description": "e.g. Rain, distilled or RO water only. Tray method, 1–2 cm deep."
+    },
+    {
+      "key": "soil",
+      "name": "Soil",
+      "type": "single_line_text_field",
+      "description": "e.g. 1:1 peat & perlite. Never fertilise."
+    },
+    {
+      "key": "temperature",
+      "name": "Temperature",
+      "type": "single_line_text_field",
+      "description": "e.g. 2–35 °C"
+    },
+    {
+      "key": "dormancy",
+      "name": "Dormancy",
+      "type": "single_line_text_field",
+      "description": "e.g. Required — cool winter rest, Jun–Aug"
+    },
+    {
+      "key": "needs_dormancy",
+      "name": "Needs winter dormancy",
+      "type": "boolean",
+      "description": "Shows the dormancy-season notice on the product page (Theme settings → Live plant shipping)."
+    },
+    {
+      "key": "pot_size",
+      "name": "Supplied as",
+      "type": "single_line_text_field",
+      "description": "e.g. 9 cm pot, mature"
+    },
+    {
+      "key": "mature_size",
+      "name": "Mature size",
+      "type": "single_line_text_field"
+    },
+    {
+      "key": "origin",
+      "name": "Native to",
+      "type": "single_line_text_field"
+    },
+    {
+      "key": "care_guide",
+      "name": "Care guide link",
+      "type": "url",
+      "description": "Link to the matching care-guide blog post."
+    }
+  ],
+  "collection": [
+    {
+      "key": "care_guide",
+      "name": "Care guide link",
+      "type": "url",
+      "description": "Shown under the collection title, e.g. the Venus flytrap care guide."
+    }
+  ],
+  "article": [
+    {
+      "key": "related_products",
+      "name": "Plants in this guide",
+      "type": "list.product_reference",
+      "description": "Adds a 'Plants in this guide' product row under the article."
+    }
+  ]
+}

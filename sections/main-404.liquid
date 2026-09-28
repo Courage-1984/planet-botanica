@@ -1,0 +1,20 @@
+<div class="section scheme-light" style="--pt: 96px; --pb: 96px;">
+  <div class="container container--narrow empty-state empty-state--page">
+    {%- render 'icon', icon: 'trap' -%}
+    <p class="eyebrow">404</p>
+    <h1 class="h1">{{ 'templates.404.title' | t }}</h1>
+    <p>{{ 'templates.404.subtext' | t }}</p>
+    <div class="search-404">
+      {% render 'search-form', id: '404' %}
+    </div>
+    <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">{{ 'cart.general.continue' | t }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "404 page",
+  "class": "section-main-404",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,42 @@
+{%- comment -%}
+  Renders a product or variant price.
+  Accepts:
+  - product: {Object} product
+  - variant: {Object} optional variant (defaults to selected or first available)
+  - show_from: {Boolean} prefix "From" when prices vary (cards)
+{%- endcomment -%}
+
+{%- liquid
+  assign target = variant | default: product.selected_or_first_available_variant
+  assign price = target.price
+  assign compare_at = target.compare_at_price
+  assign on_sale = false
+  if compare_at > price
+    assign on_sale = true
+  endif
+-%}
+
+<div class="price{% if on_sale %} price--sale{% endif %}{% unless target.available %} price--sold-out{% endunless %}">
+  {%- if show_from and product.price_varies -%}
+    {%- assign from_price = product.price_min | money -%}
+    <span class="price__current">{{ 'products.product.price.from_html' | t: price: from_price }}</span>
+  {%- else -%}
+    {%- if on_sale -%}
+      <span class="visually-hidden">{{ 'products.product.price.regular' | t }}</span>
+      <s class="price__compare">{{ compare_at | money }}</s>
+      <span class="visually-hidden">{{ 'products.product.price.sale' | t }}</span>
+    {%- endif -%}
+    <span class="price__current">{{ price | money }}</span>
+  {%- endif -%}
+
+  {%- if target.unit_price_measurement -%}
+    <span class="price__unit">
+      {{- target.unit_price | money -}}
+      /
+      {%- if target.unit_price_measurement.reference_value != 1 -%}
+        {{- target.unit_price_measurement.reference_value -}}
+      {%- endif -%}
+      {{- target.unit_price_measurement.reference_unit -}}
+    </span>
+  {%- endif -%}
+</div>

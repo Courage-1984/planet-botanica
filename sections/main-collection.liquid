@@ -1,0 +1,157 @@
+{%- paginate collection.products by section.settings.products_per_page -%}
+  {%- assign care_guide = collection.metafields.plant.care_guide.value -%}
+
+  <div
+    class="section scheme-{{ section.settings.color_scheme }}"
+    style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;"
+  >
+    <div class="container">
+      <header class="page-header{% if section.settings.show_image and collection.image %} page-header--image{% endif %}">
+        <div class="page-header__text">
+          <nav class="breadcrumbs" aria-label="{{ 'general.breadcrumbs' | t }}">
+            <a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a>
+            <span aria-hidden="true">/</span>
+            <a href="{{ routes.collections_url }}">{{ 'collections.general.all' | t }}</a>
+          </nav>
+          <h1 class="h1">{{ collection.title | escape }}</h1>
+          {%- if section.settings.show_description and collection.description != blank -%}
+            <div class="rte page-header__description">{{ collection.description }}</div>
+          {%- endif -%}
+          {%- if care_guide != blank -%}
+            <a href="{{ care_guide }}" class="link-arrow">
+              {{- 'collections.general.care_guide' | t -}}
+              {%- render 'icon', icon: 'arrow-right' -%}
+            </a>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.show_image and collection.image -%}
+          <div class="page-header__media media" style="--ratio: 1.5;">
+            {{
+              collection.image
+              | image_url: width: 1200
+              | image_tag:
+                loading: 'eager',
+                widths: '375, 550, 750, 1100, 1200',
+                sizes: '(min-width: 990px) 40vw, 100vw'
+            }}
+          </div>
+        {%- endif -%}
+      </header>
+
+      <facet-filters class="collection" data-section-id="{{ section.id }}">
+        {%- if section.settings.enable_filtering -%}
+          <aside class="collection__filters" data-facets-region="filters">
+            {% render 'facets', results: collection, section_id: section.id %}
+          </aside>
+        {%- endif -%}
+
+        <div class="collection__results" data-facets-region="results">
+          <p class="collection__count" role="status">
+            {{ 'collections.general.product_count' | t: count: collection.products_count }}
+          </p>
+
+          {%- if collection.products.size > 0 -%}
+            <ul class="grid grid--products" role="list" style="--cols: {{ section.settings.columns }};">
+              {%- for product in collection.products -%}
+                {%- liquid
+                  assign lazy = true
+                  if forloop.index <= 4
+                    assign lazy = false
+                  endif
+                -%}
+                <li>{% render 'product-card', card_product: product, section_id: section.id, lazy: lazy, heading_level: 'h2' %}</li>
+              {%- endfor -%}
+            </ul>
+          {%- else -%}
+            <div class="empty-state">
+              {%- render 'icon', icon: 'leaf' -%}
+              <p class="h4">{{ 'collections.general.no_matches' | t }}</p>
+              <a href="{{ collection.url }}" class="btn btn--secondary" data-facet-link>{{ 'collections.filters.clear_all' | t }}</a>
+            </div>
+          {%- endif -%}
+
+          {% render 'pagination', paginate: paginate %}
+        </div>
+      </facet-filters>
+    </div>
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Product grid",
+  "tag": "section",
+  "class": "section-main-collection",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "label": "Products per page",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns on desktop",
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "label": "Enable filtering & sorting",
+      "info": "Configure filters with the Search & Discovery app.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show collection description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Show collection image",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "surface", "label": "Light surface" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ]
+}
+{% endschema %}

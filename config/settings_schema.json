@@ -1,0 +1,480 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Planet Botanica",
+    "theme_version": "1.0.0",
+    "theme_author": "Logi-Ink",
+    "theme_documentation_url": "https://logi-ink.co.za",
+    "theme_support_url": "https://logi-ink.co.za"
+  },
+  {
+    "name": "Logo & favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "min": 60,
+        "max": 300,
+        "step": 10,
+        "unit": "px",
+        "label": "Logo width (desktop)",
+        "default": 150
+      },
+      {
+        "type": "image_picker",
+        "id": "logo_inverse",
+        "label": "Logo for dark backgrounds",
+        "info": "Optional. Used in the footer and on dark sections."
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "Square image, at least 64 × 64px."
+      }
+    ]
+  },
+  {
+    "name": "Colours",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Placeholder palette. Swap in the client's brand colours here — every section picks from these schemes."
+      },
+      {
+        "type": "header",
+        "content": "Light scheme"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background",
+        "default": "#F3F0E8"
+      },
+      {
+        "type": "color",
+        "id": "color_foreground",
+        "label": "Text",
+        "default": "#1B2A20"
+      },
+      {
+        "type": "color",
+        "id": "color_surface",
+        "label": "Surface (cards, alternate sections)",
+        "default": "#E7E2D4"
+      },
+      {
+        "type": "header",
+        "content": "Dark scheme"
+      },
+      {
+        "type": "color",
+        "id": "color_background_dark",
+        "label": "Background",
+        "default": "#14231A"
+      },
+      {
+        "type": "color",
+        "id": "color_foreground_dark",
+        "label": "Text",
+        "default": "#ECE9DF"
+      },
+      {
+        "type": "color",
+        "id": "color_surface_dark",
+        "label": "Surface",
+        "default": "#1D3226"
+      },
+      {
+        "type": "header",
+        "content": "Accents"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent (buttons, sale)",
+        "default": "#9E2B25"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_foreground",
+        "label": "Text on accent",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_highlight",
+        "label": "Highlight (badges, focus details)",
+        "default": "#C9A54C"
+      },
+      {
+        "type": "color",
+        "id": "color_success",
+        "label": "In stock / success",
+        "default": "#2F6B3F"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "type_heading_font",
+        "label": "Headings",
+        "default": "lora_n4"
+      },
+      {
+        "type": "range",
+        "id": "heading_scale",
+        "min": 80,
+        "max": 140,
+        "step": 5,
+        "unit": "%",
+        "label": "Heading size",
+        "default": 100
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Body",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "range",
+        "id": "body_scale",
+        "min": 90,
+        "max": 120,
+        "step": 5,
+        "unit": "%",
+        "label": "Body size",
+        "default": 100
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "min": 1000,
+        "max": 1600,
+        "step": 20,
+        "unit": "px",
+        "label": "Page width",
+        "default": 1320
+      },
+      {
+        "type": "range",
+        "id": "radius",
+        "min": 0,
+        "max": 24,
+        "step": 2,
+        "unit": "px",
+        "label": "Card & image corner radius",
+        "default": 6
+      },
+      {
+        "type": "range",
+        "id": "button_radius",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "label": "Button corner radius",
+        "default": 40
+      }
+    ]
+  },
+  {
+    "name": "Product cards",
+    "settings": [
+      {
+        "type": "select",
+        "id": "card_image_ratio",
+        "label": "Image ratio",
+        "options": [
+          { "value": "portrait", "label": "Portrait (4:5)" },
+          { "value": "square", "label": "Square" },
+          { "value": "natural", "label": "Natural" }
+        ],
+        "default": "portrait"
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_secondary_image",
+        "label": "Show second image on hover",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_botanical",
+        "label": "Show botanical name",
+        "info": "From the plant.botanical_name metafield.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_care",
+        "label": "Show difficulty & trap type",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_quick_add",
+        "label": "Enable quick add",
+        "info": "Single-variant products add straight to cart. Multi-variant products link to the product page.",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Live plant shipping",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Products tagged with the tag below show dispatch information on the product page and in the cart."
+      },
+      {
+        "type": "text",
+        "id": "plant_tag",
+        "label": "Live plant product tag",
+        "default": "live-plant"
+      },
+      {
+        "type": "header",
+        "content": "Dispatch days"
+      },
+      {
+        "type": "checkbox",
+        "id": "dispatch_mon",
+        "label": "Monday",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "dispatch_tue",
+        "label": "Tuesday",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "dispatch_wed",
+        "label": "Wednesday",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "dispatch_thu",
+        "label": "Thursday",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "dispatch_fri",
+        "label": "Friday",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "dispatch_cutoff_hour",
+        "min": 8,
+        "max": 17,
+        "step": 1,
+        "unit": "h",
+        "label": "Same-day dispatch cut-off (SAST)",
+        "default": 12
+      },
+      {
+        "type": "richtext",
+        "id": "shipping_notice",
+        "label": "Live plant shipping note",
+        "default": "<p>Live plants ship early in the week in breathable, insulated packaging so they never sit in a courier depot over a weekend.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Dispatch pause"
+      },
+      {
+        "type": "checkbox",
+        "id": "dispatch_paused",
+        "label": "Pause live plant dispatch",
+        "info": "Use for heatwaves, courier shutdowns or the December break. Orders are still accepted.",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "dispatch_pause_message",
+        "label": "Pause message",
+        "default": "Live plant dispatch is paused over the holiday break — orders placed now ship from the first dispatch day in January."
+      },
+      {
+        "type": "header",
+        "content": "Dormancy"
+      },
+      {
+        "type": "range",
+        "id": "dormancy_start_month",
+        "min": 1,
+        "max": 12,
+        "step": 1,
+        "label": "Dormancy season starts (month)",
+        "default": 5
+      },
+      {
+        "type": "range",
+        "id": "dormancy_end_month",
+        "min": 1,
+        "max": 12,
+        "step": 1,
+        "label": "Dormancy season ends (month)",
+        "default": 8
+      },
+      {
+        "type": "text",
+        "id": "dormancy_notice",
+        "label": "Dormancy notice",
+        "default": "It's dormancy season. Temperate plants ship as small winter rosettes or rhizomes — completely normal, and they burst back into growth in spring."
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart type",
+        "options": [
+          { "value": "drawer", "label": "Drawer" },
+          { "value": "page", "label": "Page" }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_show_note",
+        "label": "Enable order note",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping threshold (Rand)",
+        "info": "Shows a progress bar in the cart. Set to 0 to hide. Must match your shipping rates in Settings → Shipping.",
+        "default": 900
+      }
+    ]
+  },
+  {
+    "name": "Search",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "predictive_search_enabled",
+        "label": "Enable search suggestions",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Social & WhatsApp",
+    "settings": [
+      {
+        "type": "text",
+        "id": "social_instagram_link",
+        "label": "Instagram",
+        "info": "https://instagram.com/..."
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_link",
+        "label": "Facebook"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok_link",
+        "label": "TikTok"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube_link",
+        "label": "YouTube"
+      },
+      {
+        "type": "text",
+        "id": "social_pinterest_link",
+        "label": "Pinterest"
+      },
+      {
+        "type": "header",
+        "content": "WhatsApp chat button"
+      },
+      {
+        "type": "checkbox",
+        "id": "whatsapp_enabled",
+        "label": "Show WhatsApp button",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_number",
+        "label": "WhatsApp number",
+        "info": "International format without + or spaces, e.g. 27821234567"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_message",
+        "label": "Pre-filled message",
+        "default": "Hi! I have a question about a plant."
+      }
+    ]
+  },
+  {
+    "name": "Business details",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "The ECT Act (section 43) requires online sellers in South Africa to display these details. They appear in the footer."
+      },
+      {
+        "type": "text",
+        "id": "legal_name",
+        "label": "Legal / trading name"
+      },
+      {
+        "type": "text",
+        "id": "registration_number",
+        "label": "Company registration number",
+        "info": "Leave blank for sole proprietors."
+      },
+      {
+        "type": "text",
+        "id": "vat_number",
+        "label": "VAT number",
+        "info": "Only if VAT registered."
+      },
+      {
+        "type": "textarea",
+        "id": "physical_address",
+        "label": "Physical address"
+      },
+      {
+        "type": "text",
+        "id": "contact_email",
+        "label": "Contact email"
+      },
+      {
+        "type": "text",
+        "id": "contact_phone",
+        "label": "Contact phone"
+      }
+    ]
+  }
+]

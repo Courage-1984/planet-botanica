@@ -1,0 +1,112 @@
+{%- comment -%}
+  Loaded client-side from /recommendations/products so the product page stays cacheable.
+  "Complementary" uses products you pair in the Search & Discovery app —
+  perfect for soil, pots and rainwater kits alongside a plant.
+{%- endcomment -%}
+
+<div
+  class="section scheme-{{ section.settings.color_scheme }}"
+  style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;"
+>
+  <product-recommendations
+    class="container recommendations"
+    data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}&intent={{ section.settings.intent }}"
+  >
+    {%- if recommendations.performed and recommendations.products_count > 0 -%}
+      <div class="section-header">
+        <div>
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+          {%- endif -%}
+          <h2 class="h2">{{ section.settings.heading }}</h2>
+        </div>
+      </div>
+      <ul class="grid grid--products grid--scroll" role="list" style="--cols: {{ section.settings.columns }};">
+        {%- for recommendation in recommendations.products -%}
+          <li>{% render 'product-card', card_product: recommendation, section_id: section.id %}</li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </product-recommendations>
+</div>
+
+{% schema %}
+{
+  "name": "Product recommendations",
+  "tag": "section",
+  "class": "section-recommendations",
+  "settings": [
+    {
+      "type": "select",
+      "id": "intent",
+      "label": "Recommendation type",
+      "options": [
+        { "value": "related", "label": "Related (automatic)" },
+        { "value": "complementary", "label": "Complementary (set in Search & Discovery)" }
+      ],
+      "default": "related"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "You may also like"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "label": "Products to show",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Columns on desktop",
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "surface", "label": "Light surface" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ]
+}
+{% endschema %}

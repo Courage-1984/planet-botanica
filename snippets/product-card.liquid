@@ -1,0 +1,112 @@
+{%- comment -%}
+  Product card used in grids and sliders.
+  Accepts:
+  - card_product: {Object} product
+  - section_id: {String} parent section id (for unique form ids)
+  - lazy: {Boolean} lazy-load the image (default true)
+  - heading_level: {String} 'h2' or 'h3' (default h3)
+{%- endcomment -%}
+
+{%- liquid
+  assign variant = card_product.selected_or_first_available_variant
+  assign image = card_product.featured_media.preview_image
+  assign second_image = card_product.media[1].preview_image
+  assign botanical = card_product.metafields.plant.botanical_name.value
+  assign image_alt = image.alt | default: card_product.title | escape
+  assign tag = heading_level | default: 'h3'
+
+  assign loading = 'lazy'
+  if lazy == false
+    assign loading = 'eager'
+  endif
+
+  assign ratio = 0.8
+  if settings.card_image_ratio == 'square'
+    assign ratio = 1
+  elsif settings.card_image_ratio == 'natural' and image
+    assign ratio = image.aspect_ratio
+  endif
+
+  assign on_sale = false
+  if variant.compare_at_price > variant.price
+    assign on_sale = true
+  endif
+
+  assign form_id = 'QuickAdd-' | append: section_id | append: '-' | append: card_product.id
+-%}
+
+<article class="product-card{% unless card_product.available %} is-sold-out{% endunless %}">
+  <div class="product-card__media media" style="--ratio: {{ ratio }};">
+    {%- if image -%}
+      {{
+        image
+        | image_url: width: 1100
+        | image_tag:
+          loading: loading,
+          widths: '240, 360, 480, 640, 800, 1100',
+          sizes: '(min-width: 1200px) 320px, (min-width: 750px) calc((100vw - 8rem) / 3), calc((100vw - 3rem) / 2)',
+          class: 'product-card__image',
+          alt: image_alt
+      }}
+      {%- if settings.card_show_secondary_image and second_image -%}
+        {{
+          second_image
+          | image_url: width: 1100
+          | image_tag:
+            loading: 'lazy',
+            widths: '240, 360, 480, 640, 800, 1100',
+            sizes: '(min-width: 1200px) 320px, (min-width: 750px) calc((100vw - 8rem) / 3), calc((100vw - 3rem) / 2)',
+            class: 'product-card__image product-card__image--secondary',
+            alt: ''
+        }}
+      {%- endif -%}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+
+    <div class="product-card__badges">
+      {%- if card_product.available == false -%}
+        <span class="badge badge--muted">{{ 'products.product.sold_out' | t }}</span>
+      {%- elsif on_sale -%}
+        <span class="badge badge--accent">{{ 'products.product.on_sale' | t }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="product-card__info">
+    {%- if settings.card_show_botanical and botanical != blank -%}
+      <p class="product-card__botanical">{{ botanical }}</p>
+    {%- endif -%}
+
+    <{{ tag }} class="product-card__title">
+      <a href="{{ card_product.url }}" class="product-card__link">{{ card_product.title | escape }}</a>
+    </{{ tag }}>
+
+    {%- if settings.card_show_care -%}
+      {% render 'care-badges', product: card_product %}
+    {%- endif -%}
+
+    {% render 'price', product: card_product, show_from: true %}
+  </div>
+
+  {%- if settings.card_quick_add and card_product.available -%}
+    <div class="product-card__actions">
+      {%- if card_product.has_only_default_variant -%}
+        <product-form>
+          {%- form 'product', card_product, id: form_id, class: 'product-card__form', novalidate: 'novalidate' -%}
+            <input type="hidden" name="id" value="{{ variant.id }}">
+            <button type="submit" name="add" class="btn btn--small btn--secondary btn--full">
+              <span class="btn__label">{{ 'products.product.add_to_cart' | t }}</span>
+              <span class="btn__spinner" aria-hidden="true"></span>
+            </button>
+            <p class="form-error" role="alert" hidden></p>
+          {%- endform -%}
+        </product-form>
+      {%- else -%}
+        <a href="{{ card_product.url }}" class="btn btn--small btn--secondary btn--full" tabindex="-1">
+          {{- 'products.product.choose_options' | t -}}
+        </a>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</article>

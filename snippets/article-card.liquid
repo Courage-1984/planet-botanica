@@ -1,0 +1,41 @@
+{%- comment -%}
+  Accepts: article (Object), show_excerpt (Boolean), heading_level (String, default h3)
+{%- endcomment -%}
+
+{%- assign tag = heading_level | default: 'h3' -%}
+
+<article class="article-card">
+  <div class="article-card__media media" style="--ratio: 1.5;">
+    {%- if article.image -%}
+      {{
+        article.image
+        | image_url: width: 1000
+        | image_tag:
+          loading: 'lazy',
+          widths: '360, 540, 720, 1000',
+          sizes: '(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw',
+          alt: article.image.alt
+      }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+  </div>
+  <div class="article-card__info">
+    <p class="eyebrow">
+      <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: format: 'date' }}</time>
+      {%- if article.tags.size > 0 %} · {{ article.tags.first }}{% endif -%}
+    </p>
+    <{{ tag }} class="article-card__title">
+      <a href="{{ article.url }}" class="article-card__link">{{ article.title | escape }}</a>
+    </{{ tag }}>
+    {%- if show_excerpt -%}
+      <p class="article-card__excerpt">
+        {%- if article.excerpt.size > 0 -%}
+          {{ article.excerpt | strip_html | truncatewords: 28 }}
+        {%- else -%}
+          {{ article.content | strip_html | truncatewords: 28 }}
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+  </div>
+</article>

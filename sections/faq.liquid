@@ -1,0 +1,183 @@
+<div
+  class="section scheme-{{ section.settings.color_scheme }}"
+  style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="container">
+    <div class="faq">
+      <div class="faq__intro">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="h2">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <div class="rte">{{ section.settings.text }}</div>
+        {%- endif -%}
+      </div>
+
+      <div class="accordion">
+        {%- for block in section.blocks -%}
+          <details class="accordion__item" {{ block.shopify_attributes }}>
+            <summary class="accordion__summary">
+              <span>{{ block.settings.question }}</span>
+              {%- render 'icon', icon: 'plus' -%}
+            </summary>
+            <div class="accordion__content rte">{{ block.settings.answer }}</div>
+          </details>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- if section.settings.enable_schema and section.blocks.size > 0 -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- for block in section.blocks -%}
+          {
+            "@type": "Question",
+            "name": {{ block.settings.question | json }},
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": {{ block.settings.answer | strip_html | json }}
+            }
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "tag": "section",
+  "class": "section-faq",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Good questions"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Carnivore care, answered"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Can't find your answer? Message us on WhatsApp — we love talking plants.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_schema",
+      "label": "Add FAQ structured data for Google",
+      "info": "Use on one FAQ section per page.",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "surface", "label": "Light surface" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Answer</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        {
+          "type": "question",
+          "settings": {
+            "question": "Can I water my plant with tap water?",
+            "answer": "<p>No — carnivorous plants evolved in mineral-poor bogs, and the dissolved minerals in most municipal water slowly kill them. Use rainwater, distilled water or reverse-osmosis water, and sit the pot in a shallow tray.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Should I feed my plant?",
+            "answer": "<p>Outdoors, plants catch all the insects they need. Indoors, an occasional small insect in one or two traps a month is plenty. Never feed meat, and never use fertiliser in the soil.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "My flytrap went black and small in winter. Is it dying?",
+            "answer": "<p>Probably not. Venus flytraps and trumpet pitchers (Sarracenia) need a cool winter dormancy — roughly June to August in South Africa. Keep them cool and damp, trim dead leaves, and they'll regrow in spring.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Do you deliver countrywide?",
+            "answer": "<p>Yes. We courier to all major centres and most regional areas in South Africa, or you can choose a pickup point at checkout.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

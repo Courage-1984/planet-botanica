@@ -1,0 +1,110 @@
+{%- paginate search.results by 24 -%}
+  <div
+    class="section scheme-{{ section.settings.color_scheme }}"
+    style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;"
+  >
+    <div class="container">
+      <header class="page-header page-header--search">
+        <div class="page-header__text">
+          <h1 class="h1">
+            {%- if search.performed -%}
+              {{ 'general.search.results_for' | t: terms: search.terms }}
+            {%- else -%}
+              {{ 'general.search.title' | t }}
+            {%- endif -%}
+          </h1>
+          {% render 'search-form', id: 'Page', terms: search.terms %}
+        </div>
+      </header>
+
+      {%- if search.performed -%}
+        <facet-filters class="collection" data-section-id="{{ section.id }}">
+          {%- if search.filters.size > 0 -%}
+            <aside class="collection__filters" data-facets-region="filters">
+              {% render 'facets', results: search, section_id: section.id, terms: search.terms %}
+            </aside>
+          {%- endif -%}
+
+          <div class="collection__results" data-facets-region="results">
+            <p class="collection__count" role="status">
+              {{ 'general.search.result_count' | t: count: search.results_count }}
+            </p>
+
+            {%- if search.results_count > 0 -%}
+              <ul class="grid grid--products" role="list" style="--cols: 3;">
+                {%- for item in search.results -%}
+                  <li>
+                    {%- case item.object_type -%}
+                      {%- when 'product' -%}
+                        {% render 'product-card', card_product: item, section_id: section.id, heading_level: 'h2' %}
+                      {%- when 'article' -%}
+                        {% render 'article-card', article: item, show_excerpt: true, heading_level: 'h2' %}
+                      {%- when 'page' -%}
+                        <article class="search-page-card">
+                          <p class="eyebrow">{{ 'general.search.page' | t }}</p>
+                          <h2 class="article-card__title">
+                            <a href="{{ item.url }}" class="article-card__link">{{ item.title | escape }}</a>
+                          </h2>
+                          <p>{{ item.content | strip_html | truncatewords: 24 }}</p>
+                        </article>
+                    {%- endcase -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- else -%}
+              <div class="empty-state">
+                {%- render 'icon', icon: 'search' -%}
+                <p class="h4">{{ 'general.search.no_results' | t: terms: search.terms }}</p>
+                <p>{{ 'general.search.no_results_hint' | t }}</p>
+              </div>
+            {%- endif -%}
+
+            {% render 'pagination', paginate: paginate %}
+          </div>
+        </facet-filters>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Search results",
+  "tag": "section",
+  "class": "section-main-search",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "surface", "label": "Light surface" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-search",
+      "settings": {
+        "color_scheme": "light",
+        "padding_top": 32,
+        "padding_bottom": 64
+      }
+    }
+  },
+  "order": ["main"]
+}

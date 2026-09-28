@@ -1,0 +1,106 @@
+{%- comment -%}
+  Herbarium-label style care card built from plant.* metafields.
+  Accepts: product (Object), heading (string, optional)
+{%- endcomment -%}
+
+{%- liquid
+  assign plant = product.metafields.plant
+  assign botanical = plant.botanical_name.value
+  assign difficulty = plant.difficulty.value
+  assign environment = plant.environment.value
+  assign care_guide = plant.care_guide.value
+
+  assign card_heading = heading
+  if card_heading == blank
+    assign card_heading = 'products.care.heading' | t
+  endif
+
+  assign care_keys = 'light:sun,water:water,soil:soil,humidity:humidity,temperature:thermometer,dormancy:moon' | split: ','
+  assign specimen_keys = 'trap_type:trap,pot_size:soil,mature_size:ruler,origin:globe' | split: ','
+
+  assign has_care = false
+  for pair in care_keys
+    assign key = pair | split: ':' | first
+    if plant[key].value != blank
+      assign has_care = true
+      break
+    endif
+  endfor
+-%}
+
+{%- if has_care or botanical != blank or difficulty != blank -%}
+  <section class="care-card" aria-labelledby="CareCard-{{ product.id }}">
+    <header class="care-card__header">
+      <p class="eyebrow">{{ card_heading }}</p>
+      <h2 id="CareCard-{{ product.id }}" class="care-card__title">
+        {%- if botanical != blank -%}
+          <em>{{ botanical }}</em>
+        {%- else -%}
+          {{ product.title }}
+        {%- endif -%}
+      </h2>
+      {%- if difficulty != blank -%}
+        <div class="care-card__difficulty">
+          <span class="care-card__key">{{ 'products.care.difficulty' | t }}</span>
+          {% render 'difficulty-meter', difficulty: difficulty %}
+        </div>
+      {%- endif -%}
+    </header>
+
+    {%- if has_care -%}
+      <dl class="care-card__grid">
+        {%- for pair in care_keys -%}
+          {%- liquid
+            assign parts = pair | split: ':'
+            assign key = parts[0]
+            assign value = plant[key].value
+          -%}
+          {%- if value != blank -%}
+            <div class="care-card__row">
+              <dt>
+                {%- render 'icon', icon: parts[1] -%}
+                <span class="care-card__key">{% render 'care-label', key: key %}</span>
+              </dt>
+              <dd>{{ value | newline_to_br }}</dd>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </dl>
+    {%- endif -%}
+
+    <dl class="care-card__specimen">
+      {%- for pair in specimen_keys -%}
+        {%- liquid
+          assign parts = pair | split: ':'
+          assign key = parts[0]
+          assign value = plant[key].value
+        -%}
+        {%- if value != blank -%}
+          <div class="care-card__row care-card__row--compact">
+            <dt>
+              {%- render 'icon', icon: parts[1] -%}
+              <span class="care-card__key">{% render 'care-label', key: key %}</span>
+            </dt>
+            <dd>{{ value }}</dd>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if environment != blank -%}
+        <div class="care-card__row care-card__row--compact">
+          <dt>
+            {%- render 'icon', icon: 'leaf' -%}
+            <span class="care-card__key">{{ 'products.care.environment' | t }}</span>
+          </dt>
+          <dd>{{ environment | join: ', ' }}</dd>
+        </div>
+      {%- endif -%}
+    </dl>
+
+    {%- if care_guide != blank -%}
+      <a class="care-card__guide link-arrow" href="{{ care_guide }}">
+        {{- 'products.care.read_guide' | t -}}
+        {%- render 'icon', icon: 'arrow-right' -%}
+      </a>
+    {%- endif -%}
+  </section>
+{%- endif -%}

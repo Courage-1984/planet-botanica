@@ -1,0 +1,198 @@
+{%- liquid
+  assign image = section.settings.image
+  assign image_mobile = section.settings.image_mobile
+  assign loading = 'lazy'
+  if section.index == 1 or section.index == nil
+    assign loading = 'eager'
+  endif
+-%}
+
+<div
+  class="hero hero--{{ section.settings.height }} hero--{{ section.settings.alignment }} hero--{{ section.settings.position }}{% if image != blank %} hero--has-image{% endif %} scheme-{{ section.settings.color_scheme }}"
+  style="--overlay: {{ section.settings.overlay | divided_by: 100.0 }};"
+>
+  <div class="hero__media">
+    {%- if image != blank -%}
+      <picture>
+        {%- if image_mobile != blank -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="{{ image_mobile | image_url: width: 750 }} 750w, {{ image_mobile | image_url: width: 1100 }} 1100w, {{ image_mobile | image_url: width: 1500 }} 1500w"
+            sizes="100vw"
+          >
+        {%- endif -%}
+        {{
+          image
+          | image_url: width: 3000
+          | image_tag:
+            class: 'hero__image',
+            loading: loading,
+            fetchpriority: 'high',
+            widths: '750, 1100, 1500, 2000, 2600, 3000',
+            sizes: '100vw'
+        }}
+      </picture>
+    {%- else -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg hero__image' }}
+    {%- endif -%}
+  </div>
+
+  <div class="hero__content container">
+    <div class="hero__box">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="hero__heading h0">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <div class="hero__text rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank or section.settings.button_label_2 != blank -%}
+        <div class="button-row">
+          {%- if section.settings.button_label != blank -%}
+            <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="btn btn--primary">
+              {{- section.settings.button_label | escape -}}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.button_label_2 != blank -%}
+            <a href="{{ section.settings.button_link_2 | default: routes.all_products_collection_url }}" class="btn btn--secondary btn--on-media">
+              {{- section.settings.button_label_2 | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "section",
+  "class": "section-hero",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Landscape, at least 2400px wide."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Optional. Portrait crop for phones."
+    },
+    {
+      "type": "range",
+      "id": "overlay",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Image overlay",
+      "default": 35
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" },
+        { "value": "full", "label": "Full screen" }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Centre" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Content position",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "middle", "label": "Middle" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "bottom"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "info": "Text colour over the image, or background when no image is set.",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "surface", "label": "Light surface" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "dark"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Nursery-grown in South Africa"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Use italics for botanical names.",
+      "default": "Plants that <em>bite back</em>"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Venus flytraps, sundews, pitcher plants and more — grown on rainwater, hardened for our climate and delivered to your door.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Primary button label",
+      "default": "Shop all plants"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Secondary button label",
+      "default": "Beginner-friendly plants"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Secondary button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero"
+    }
+  ]
+}
+{% endschema %}

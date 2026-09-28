@@ -1,0 +1,212 @@
+<div
+  class="section scheme-{{ section.settings.color_scheme }}"
+  style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="container">
+    {%- if section.settings.heading != blank or section.settings.eyebrow != blank -%}
+      <div class="section-header section-header--{{ section.settings.alignment }}">
+        <div>
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="h2">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    <ul class="grid columns columns--{{ section.settings.alignment }}" role="list" style="--cols: {{ section.settings.columns }};">
+      {%- for block in section.blocks -%}
+        <li class="column" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            <div class="column__media media" style="--ratio: 1.5;">
+              {{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '300, 500, 800', sizes: '(min-width: 990px) 33vw, 100vw' }}
+            </div>
+          {%- elsif block.settings.icon != 'none' -%}
+            <span class="column__icon">{% render 'icon', icon: block.settings.icon %}</span>
+          {%- endif -%}
+          {%- if block.settings.heading != blank -%}
+            <h3 class="column__heading">{{ block.settings.heading }}</h3>
+          {%- endif -%}
+          {%- if block.settings.text != blank -%}
+            <div class="rte column__text">{{ block.settings.text }}</div>
+          {%- endif -%}
+          {%- if block.settings.link_label != blank -%}
+            <a href="{{ block.settings.link }}" class="link-arrow">
+              {{- block.settings.link_label | escape -}}
+              {%- render 'icon', icon: 'arrow-right' -%}
+            </a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Multicolumn",
+  "tag": "section",
+  "class": "section-multicolumn",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Grown right, shipped right"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns on desktop",
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Centre" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "surface", "label": "Light surface" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "surface"
+    },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Column",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "water", "label": "Water" },
+            { "value": "sun", "label": "Sun" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "soil", "label": "Pot" },
+            { "value": "trap", "label": "Trap" },
+            { "value": "truck", "label": "Delivery" },
+            { "value": "shield", "label": "Guarantee" },
+            { "value": "chat", "label": "Chat" },
+            { "value": "calendar", "label": "Calendar" },
+            { "value": "thermometer", "label": "Thermometer" },
+            { "value": "map-pin", "label": "Location" }
+          ],
+          "default": "leaf"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Replaces the icon."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Column"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Pair text with an icon to focus on what makes the nursery different.</p>"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Multicolumn",
+      "blocks": [
+        {
+          "type": "column",
+          "settings": {
+            "icon": "water",
+            "heading": "Rainwater raised",
+            "text": "<p>Every plant is grown on rainwater in mineral-free media — no tap-water shock when it reaches you.</p>"
+          }
+        },
+        {
+          "type": "column",
+          "settings": {
+            "icon": "truck",
+            "heading": "Shipped early in the week",
+            "text": "<p>Live plants dispatch Monday to Wednesday in insulated packaging, so they never sit in a depot over a weekend.</p>"
+          }
+        },
+        {
+          "type": "column",
+          "settings": {
+            "icon": "chat",
+            "heading": "Care help for life",
+            "text": "<p>Stuck? Send us a photo on WhatsApp and a real grower will help you troubleshoot.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

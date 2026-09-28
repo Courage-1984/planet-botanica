@@ -1,0 +1,18 @@
+{%- comment -%}
+  Translated label for a plant.* care metafield key.
+  Accepts: key (String)
+{%- endcomment -%}
+{%- case key -%}
+  {%- when 'light' -%}{{ 'products.care.light' | t }}
+  {%- when 'water' -%}{{ 'products.care.water' | t }}
+  {%- when 'soil' -%}{{ 'products.care.soil' | t }}
+  {%- when 'humidity' -%}{{ 'products.care.humidity' | t }}
+  {%- when 'temperature' -%}{{ 'products.care.temperature' | t }}
+  {%- when 'dormancy' -%}{{ 'products.care.dormancy' | t }}
+  {%- when 'trap_type' -%}{{ 'products.care.trap_type' | t }}
+  {%- when 'pot_size' -%}{{ 'products.care.pot_size' | t }}
+  {%- when 'mature_size' -%}{{ 'products.care.mature_size' | t }}
+  {%- when 'origin' -%}{{ 'products.care.origin' | t }}
+  {%- when 'environment' -%}{{ 'products.care.environment' | t }}
+  {%- else -%}{{ key | replace: '_', ' ' | capitalize }}
+{%- endcase -%}

@@ -1,0 +1,21 @@
+{%- comment -%}
+  Three-dot difficulty meter.
+  Accepts: difficulty (string) — "Beginner", "Intermediate" or "Advanced"
+{%- endcomment -%}
+
+{%- liquid
+  assign level = 0
+  assign d = difficulty | downcase
+  if d contains 'beginner' or d contains 'easy'
+    assign level = 1
+  elsif d contains 'intermediate' or d contains 'moderate'
+    assign level = 2
+  elsif d contains 'advanced' or d contains 'expert'
+    assign level = 3
+  endif
+-%}
+
+<span class="difficulty difficulty--{{ level }}">
+  <span class="difficulty__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+  <span class="difficulty__label">{{ difficulty }}</span>
+</span>

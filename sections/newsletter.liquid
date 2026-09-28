@@ -1,0 +1,119 @@
+<div
+  class="section scheme-{{ section.settings.color_scheme }}"
+  style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="container">
+    <div class="newsletter">
+      <div class="newsletter__intro">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="h2">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <div class="rte">{{ section.settings.text }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- assign form_id = 'NewsletterForm-' | append: section.id -%}
+      {%- form 'customer', id: form_id, class: 'newsletter__form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        {%- if form.posted_successfully? -%}
+          <p class="form-message form-message--success" role="status" tabindex="-1" autofocus>
+            {%- render 'icon', icon: 'check' -%}
+            {{ 'sections.newsletter.success' | t }}
+          </p>
+        {%- else -%}
+          <div class="newsletter__field">
+            <label for="NewsletterEmail-{{ section.id }}" class="visually-hidden">{{ 'sections.newsletter.email' | t }}</label>
+            <input
+              id="NewsletterEmail-{{ section.id }}"
+              type="email"
+              name="contact[email]"
+              class="field__input"
+              value="{{ form.email }}"
+              autocomplete="email"
+              placeholder="{{ 'sections.newsletter.email' | t }}"
+              required
+              {% if form.errors %}
+                aria-invalid="true"
+                aria-describedby="NewsletterError-{{ section.id }}"
+              {% endif %}
+            >
+            <button type="submit" class="btn btn--primary">{{ 'sections.newsletter.subscribe' | t }}</button>
+          </div>
+          {%- if form.errors -%}
+            <p class="form-message form-message--error" id="NewsletterError-{{ section.id }}">
+              {{- form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email -}}
+            </p>
+          {%- endif -%}
+          <p class="newsletter__consent">
+            {{- 'sections.newsletter.consent' | t -}}
+            {%- if shop.privacy_policy %} <a href="{{ shop.privacy_policy.url }}">{{ shop.privacy_policy.title }}</a>.{% endif -%}
+          </p>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "tag": "section",
+  "class": "section-newsletter",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Bog Letter"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Seasonal care reminders, restock alerts for rare plants and the odd growing tip. About once a month.</p>"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "surface", "label": "Light surface" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "surface"
+    },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,351 @@
+{%- comment -%}
+  "Find your carnivore" quiz. Each question block maps to a plant.* metafield
+  filter; answers become storefront filter params on the target collection, e.g.
+  /collections/live-plants?filter.p.m.plant.difficulty=Beginner
+  Requires those metafields to be enabled as filters in Search & Discovery.
+  Option values: use | for several values (Beginner|Intermediate); leave blank for "any".
+{%- endcomment -%}
+
+{%- liquid
+  assign target = section.settings.collection
+  assign action_url = target.url | default: collection.url | default: routes.all_products_collection_url
+-%}
+
+<div
+  id="finder"
+  class="section scheme-{{ section.settings.color_scheme }}"
+  style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="container">
+    <plant-finder class="finder">
+      <div class="finder__intro">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="h2">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <div class="rte">{{ section.settings.text }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.blocks.size > 0 -%}
+        <form class="finder__form" action="{{ action_url }}" method="get" novalidate>
+          <ol class="finder__progress" role="list" aria-hidden="true">
+            {%- for block in section.blocks -%}
+              <li{% if forloop.first %} class="is-active"{% endif %}></li>
+            {%- endfor -%}
+          </ol>
+
+          {%- for block in section.blocks -%}
+            {%- assign param = 'filter.p.m.plant.' | append: block.settings.filter -%}
+            <fieldset class="finder__step{% if forloop.first %} is-active{% endif %}" data-step="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+              <legend class="finder__question">
+                <span class="finder__count">{{ forloop.index }} / {{ forloop.length }}</span>
+                {{ block.settings.question }}
+              </legend>
+
+              <div class="finder__options">
+                {%- for i in (1..4) -%}
+                  {%- liquid
+                    assign label_key = 'option_' | append: i | append: '_label'
+                    assign value_key = 'option_' | append: i | append: '_value'
+                    assign icon_key = 'option_' | append: i | append: '_icon'
+                    assign label = block.settings[label_key]
+                    assign value = block.settings[value_key]
+                    assign option_icon = block.settings[icon_key]
+                  -%}
+                  {%- if label != blank -%}
+                    <label class="finder__option">
+                      <input type="radio" name="{{ param }}" value="{{ value | escape }}">
+                      <span class="finder__card">
+                        {%- if option_icon != 'none' -%}
+                          {%- render 'icon', icon: option_icon -%}
+                        {%- endif -%}
+                        <span class="finder__label">{{ label }}</span>
+                      </span>
+                    </label>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+
+              <p class="finder__error form-error" role="alert" hidden></p>
+
+              <div class="finder__nav">
+                {%- unless forloop.first -%}
+                  <button type="button" class="btn btn--ghost" data-finder-back>
+                    {%- render 'icon', icon: 'chevron-left' -%}
+                    {{ 'sections.plant_finder.back' | t }}
+                  </button>
+                {%- endunless -%}
+                {%- if forloop.last -%}
+                  <button type="submit" class="btn btn--primary">
+                    {%- if section.settings.submit_label != blank -%}
+                      {{ section.settings.submit_label | escape }}
+                    {%- else -%}
+                      {{ 'sections.plant_finder.submit' | t }}
+                    {%- endif -%}
+                  </button>
+                {%- else -%}
+                  <button type="button" class="btn btn--primary" data-finder-next>
+                    {{ 'sections.plant_finder.next' | t }}
+                    {%- render 'icon', icon: 'arrow-right' -%}
+                  </button>
+                {%- endif -%}
+              </div>
+            </fieldset>
+          {%- endfor -%}
+        </form>
+      {%- endif -%}
+    </plant-finder>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Plant finder quiz",
+  "tag": "section",
+  "class": "section-plant-finder",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Not sure where to start?"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Find your carnivore"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Three quick questions and we'll show you plants that will thrive in your space — not just survive.</p>"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Results collection",
+      "info": "Usually your 'All live plants' collection. Defaults to all products."
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit button label",
+      "default": "Show my plants"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "surface", "label": "Light surface" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "dark"
+    },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Where will your plant live?"
+        },
+        {
+          "type": "select",
+          "id": "filter",
+          "label": "Filters by",
+          "options": [
+            { "value": "environment", "label": "Growing spot (plant.environment)" },
+            { "value": "difficulty", "label": "Difficulty (plant.difficulty)" },
+            { "value": "trap_type", "label": "Trap type (plant.trap_type)" },
+            { "value": "light", "label": "Light (plant.light)" },
+            { "value": "humidity", "label": "Humidity (plant.humidity)" }
+          ],
+          "default": "environment"
+        },
+        {
+          "type": "paragraph",
+          "content": "Values must match the metafield choices exactly. Separate several with | and leave blank for 'any'."
+        },
+        { "type": "header", "content": "Option 1" },
+        { "type": "text", "id": "option_1_label", "label": "Label", "default": "A sunny windowsill" },
+        { "type": "text", "id": "option_1_value", "label": "Value", "default": "Windowsill" },
+        {
+          "type": "select",
+          "id": "option_1_icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "sun", "label": "Sun" },
+            { "value": "water", "label": "Water" },
+            { "value": "humidity", "label": "Cloud" },
+            { "value": "thermometer", "label": "Thermometer" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "soil", "label": "Pot" },
+            { "value": "trap", "label": "Trap" },
+            { "value": "moon", "label": "Moon" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "globe", "label": "Globe" }
+          ],
+          "default": "sun"
+        },
+        { "type": "header", "content": "Option 2" },
+        { "type": "text", "id": "option_2_label", "label": "Label", "default": "Outdoors — patio or garden" },
+        { "type": "text", "id": "option_2_value", "label": "Value", "default": "Outdoors" },
+        {
+          "type": "select",
+          "id": "option_2_icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "sun", "label": "Sun" },
+            { "value": "water", "label": "Water" },
+            { "value": "humidity", "label": "Cloud" },
+            { "value": "thermometer", "label": "Thermometer" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "soil", "label": "Pot" },
+            { "value": "trap", "label": "Trap" },
+            { "value": "moon", "label": "Moon" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "globe", "label": "Globe" }
+          ],
+          "default": "leaf"
+        },
+        { "type": "header", "content": "Option 3" },
+        { "type": "text", "id": "option_3_label", "label": "Label", "default": "A terrarium" },
+        { "type": "text", "id": "option_3_value", "label": "Value", "default": "Terrarium" },
+        {
+          "type": "select",
+          "id": "option_3_icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "sun", "label": "Sun" },
+            { "value": "water", "label": "Water" },
+            { "value": "humidity", "label": "Cloud" },
+            { "value": "thermometer", "label": "Thermometer" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "soil", "label": "Pot" },
+            { "value": "trap", "label": "Trap" },
+            { "value": "moon", "label": "Moon" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "globe", "label": "Globe" }
+          ],
+          "default": "humidity"
+        },
+        { "type": "header", "content": "Option 4" },
+        { "type": "text", "id": "option_4_label", "label": "Label", "info": "Leave blank to hide this option." },
+        { "type": "text", "id": "option_4_value", "label": "Value" },
+        {
+          "type": "select",
+          "id": "option_4_icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "sun", "label": "Sun" },
+            { "value": "water", "label": "Water" },
+            { "value": "humidity", "label": "Cloud" },
+            { "value": "thermometer", "label": "Thermometer" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "soil", "label": "Pot" },
+            { "value": "trap", "label": "Trap" },
+            { "value": "moon", "label": "Moon" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "globe", "label": "Globe" }
+          ],
+          "default": "none"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 5,
+  "presets": [
+    {
+      "name": "Plant finder quiz",
+      "blocks": [
+        {
+          "type": "question",
+          "settings": {
+            "option_4_label": "A greenhouse",
+            "option_4_value": "Greenhouse",
+            "option_4_icon": "thermometer"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "How green are your thumbs?",
+            "filter": "difficulty",
+            "option_1_label": "This is my first carnivore",
+            "option_1_value": "Beginner",
+            "option_1_icon": "soil",
+            "option_2_label": "I've kept a few alive",
+            "option_2_value": "Beginner|Intermediate",
+            "option_2_icon": "leaf",
+            "option_3_label": "Seasoned grower — challenge me",
+            "option_3_value": "Intermediate|Advanced",
+            "option_3_icon": "shield"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Which trap fascinates you most?",
+            "filter": "trap_type",
+            "option_1_label": "Snapping jaws",
+            "option_1_value": "Snap trap",
+            "option_1_icon": "trap",
+            "option_2_label": "Glistening sticky dew",
+            "option_2_value": "Flypaper",
+            "option_2_icon": "water",
+            "option_3_label": "Pitchers & pitfalls",
+            "option_3_value": "Pitfall",
+            "option_3_icon": "humidity",
+            "option_4_label": "Surprise me",
+            "option_4_icon": "leaf"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

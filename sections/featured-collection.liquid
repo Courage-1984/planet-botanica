@@ -1,0 +1,160 @@
+{%- liquid
+  assign collection = section.settings.collection
+  assign limit = section.settings.products_to_show
+-%}
+
+<div
+  class="section scheme-{{ section.settings.color_scheme }}"
+  style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="container">
+    <div class="section-header">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="h2">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.show_view_all and collection != blank -%}
+        <a href="{{ collection.url }}" class="link-arrow">
+          {{- 'sections.featured_collection.view_all' | t -}}
+          {%- render 'icon', icon: 'arrow-right' -%}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <ul
+      class="grid grid--products{% if section.settings.layout == 'carousel' %} grid--scroll{% endif %}"
+      role="list"
+      style="--cols: {{ section.settings.columns }};"
+    >
+      {%- if collection != blank and collection.products_count > 0 -%}
+        {%- for product in collection.products limit: limit -%}
+          <li>{% render 'product-card', card_product: product, section_id: section.id %}</li>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..4) -%}
+          <li>
+            <article class="product-card">
+              <div class="product-card__media media" style="--ratio: 0.8;">
+                {{ 'product-' | append: i | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+              <div class="product-card__info">
+                <p class="product-card__botanical">Dionaea muscipula</p>
+                <h3 class="product-card__title">{{ 'sections.featured_collection.placeholder_title' | t }}</h3>
+                <div class="price"><span class="price__current">{{ 19900 | money }}</span></div>
+              </div>
+            </article>
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured plants",
+  "tag": "section",
+  "class": "section-featured-collection",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Fresh from the bog"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured plants"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 16,
+      "step": 1,
+      "label": "Products to show",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Columns on desktop",
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Mobile layout",
+      "options": [
+        { "value": "grid", "label": "Grid" },
+        { "value": "carousel", "label": "Swipe row" }
+      ],
+      "default": "carousel"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'view all' link",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "surface", "label": "Light surface" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured plants"
+    }
+  ]
+}
+{% endschema %}

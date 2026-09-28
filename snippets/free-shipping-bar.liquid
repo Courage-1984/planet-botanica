@@ -1,0 +1,31 @@
+{%- liquid
+  assign threshold = settings.free_shipping_threshold | times: 100
+-%}
+
+{%- if threshold > 0 and cart.item_count > 0 -%}
+  {%- liquid
+    assign remaining = threshold | minus: cart.total_price
+    assign percent = cart.total_price | times: 100 | divided_by: threshold | at_most: 100
+    assign remaining_money = remaining | money
+  -%}
+  <div class="free-shipping">
+    <p class="free-shipping__text">
+      {%- if remaining > 0 -%}
+        {{ 'cart.free_shipping.remaining_html' | t: amount: remaining_money }}
+      {%- else -%}
+        {% render 'icon', icon: 'check' %}
+        {{ 'cart.free_shipping.unlocked' | t }}
+      {%- endif -%}
+    </p>
+    <div
+      class="free-shipping__bar"
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="{{ percent }}"
+      aria-label="{{ 'cart.free_shipping.label' | t }}"
+    >
+      <span style="width: {{ percent }}%;"></span>
+    </div>
+  </div>
+{%- endif -%}

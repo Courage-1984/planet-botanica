@@ -1,0 +1,40 @@
+{%- comment -%}
+  Live-plant dispatch notice. JS fills in a live countdown to the next dispatch
+  window (Africa/Johannesburg time); the server-rendered text is the fallback.
+  Accepts: compact (Boolean) — hide the long shipping note (cart drawer)
+{%- endcomment -%}
+
+<dispatch-notice class="dispatch-notice{% if settings.dispatch_paused %} dispatch-notice--paused{% endif %}">
+  {%- render 'icon', icon: 'truck' -%}
+  <div class="dispatch-notice__body">
+    {%- if settings.dispatch_paused -%}
+      <p class="dispatch-notice__eta">{{ settings.dispatch_pause_message }}</p>
+    {%- else -%}
+      {%- liquid
+        assign day_names = 'products.dispatch.weekdays' | t | split: ','
+        assign days = ''
+        if settings.dispatch_mon
+          assign days = days | append: day_names[1] | append: ', '
+        endif
+        if settings.dispatch_tue
+          assign days = days | append: day_names[2] | append: ', '
+        endif
+        if settings.dispatch_wed
+          assign days = days | append: day_names[3] | append: ', '
+        endif
+        if settings.dispatch_thu
+          assign days = days | append: day_names[4] | append: ', '
+        endif
+        if settings.dispatch_fri
+          assign days = days | append: day_names[5] | append: ', '
+        endif
+        assign days_size = days | size | minus: 2
+        assign days = days | slice: 0, days_size
+      -%}
+      <p class="dispatch-notice__eta" data-dispatch-eta>{{ 'products.dispatch.days' | t: days: days }}</p>
+    {%- endif -%}
+    {%- unless compact or settings.shipping_notice == blank -%}
+      <div class="dispatch-notice__note rte">{{ settings.shipping_notice }}</div>
+    {%- endunless -%}
+  </div>
+</dispatch-notice>

@@ -1,0 +1,20 @@
+{%- comment -%}
+  Compact care summary for product cards: difficulty + trap type.
+  Accepts: product (Object)
+{%- endcomment -%}
+
+{%- liquid
+  assign difficulty = product.metafields.plant.difficulty.value
+  assign trap = product.metafields.plant.trap_type.value
+-%}
+
+{%- if difficulty != blank or trap != blank -%}
+  <ul class="care-badges" role="list">
+    {%- if difficulty != blank -%}
+      <li>{% render 'difficulty-meter', difficulty: difficulty %}</li>
+    {%- endif -%}
+    {%- if trap != blank -%}
+      <li class="care-badges__trap">{{ trap }}</li>
+    {%- endif -%}
+  </ul>
+{%- endif -%}

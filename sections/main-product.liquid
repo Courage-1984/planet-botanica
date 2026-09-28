@@ -1,0 +1,625 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign featured_media = current_variant.featured_media | default: product.featured_media
+  assign plant = product.metafields.plant
+  assign botanical = plant.botanical_name.value
+  assign is_live_plant = false
+  if product.tags contains settings.plant_tag
+    assign is_live_plant = true
+  endif
+  assign form_id = 'ProductForm-' | append: section.id
+
+  comment
+    Dormancy window check (shop timezone). Handles windows that wrap the year end.
+  endcomment
+  assign month = 'now' | date: '%m' | plus: 0
+  assign start_month = settings.dormancy_start_month
+  assign end_month = settings.dormancy_end_month
+  assign in_dormancy = false
+  if start_month <= end_month
+    if month >= start_month and month <= end_month
+      assign in_dormancy = true
+    endif
+  elsif month >= start_month or month <= end_month
+    assign in_dormancy = true
+  endif
+-%}
+
+<div
+  class="section scheme-{{ section.settings.color_scheme }}"
+  style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="container">
+    <product-info
+      class="product"
+      data-section-id="{{ section.id }}"
+      data-url="{{ product.url }}"
+      data-variant-id="{{ current_variant.id }}"
+      data-featured-media-id="{{ featured_media.id }}"
+    >
+      {%- comment -%} Media {%- endcomment -%}
+      <div class="product__media">
+        <media-gallery class="gallery" data-section-id="{{ section.id }}">
+          <ul class="gallery__slides" role="list">
+            {%- for media in product.media -%}
+              <li
+                class="gallery__slide{% if media.id == featured_media.id %} is-active{% endif %}"
+                data-media-id="{{ media.id }}"
+                id="Media-{{ section.id }}-{{ media.id }}"
+              >
+                <div class="media" style="--ratio: {{ media.aspect_ratio | default: 1 }};">
+                  {%- case media.media_type -%}
+                    {%- when 'image' -%}
+                      {%- liquid
+                        assign media_loading = 'lazy'
+                        if media.id == featured_media.id
+                          assign media_loading = 'eager'
+                        endif
+                        assign media_alt = media.alt | default: product.title | escape
+                      -%}
+                      {{
+                        media
+                        | image_url: width: 1800
+                        | image_tag:
+                          loading: media_loading,
+                          widths: '375, 550, 750, 1100, 1500, 1800',
+                          sizes: '(min-width: 990px) 55vw, 100vw',
+                          alt: media_alt
+                      }}
+                    {%- when 'video' -%}
+                      {{ media | video_tag: controls: true, preload: 'metadata', image_size: '1100x' }}
+                    {%- when 'external_video' -%}
+                      {{ media | external_video_tag }}
+                    {%- when 'model' -%}
+                      {{ media | model_viewer_tag: image_size: '1100x', reveal: 'interaction', toggleable: true }}
+                  {%- endcase -%}
+                </div>
+              </li>
+            {%- else -%}
+              <li class="gallery__slide is-active">
+                <div class="media" style="--ratio: 0.8;">
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+              </li>
+            {%- endfor -%}
+          </ul>
+
+          {%- if product.media.size > 1 -%}
+            <ul class="gallery__thumbs" role="list">
+              {%- for media in product.media -%}
+                <li>
+                  <button
+                    type="button"
+                    class="gallery__thumb media{% if media.id == featured_media.id %} is-active{% endif %}"
+                    style="--ratio: 1;"
+                    data-media-id="{{ media.id }}"
+                    aria-label="{{ 'products.product.media.show' | t: index: forloop.index }}"
+                    {% if media.id == featured_media.id %}aria-current="true"{% endif %}
+                  >
+                    {{ media.preview_image | image_url: width: 200 | image_tag: loading: 'lazy', sizes: '100px', widths: '100, 200', alt: '' }}
+                  </button>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </media-gallery>
+      </div>
+
+      {%- comment -%} Info {%- endcomment -%}
+      <div class="product__info">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when '@app' -%}
+              {% render block %}
+
+            {%- when 'text' -%}
+              <p class="product__text product__text--{{ block.settings.style }}" {{ block.shopify_attributes }}>
+                {{- block.settings.text -}}
+              </p>
+
+            {%- when 'title' -%}
+              <div class="product__heading" {{ block.shopify_attributes }}>
+                {%- if botanical != blank -%}
+                  <p class="product__botanical">{{ botanical }}</p>
+                {%- endif -%}
+                <h1 class="product__title h1">{{ product.title | escape }}</h1>
+              </div>
+
+            {%- when 'price' -%}
+              <div class="product__price" data-swap-id="price-{{ section.id }}" {{ block.shopify_attributes }}>
+                {% render 'price', product: product, variant: current_variant %}
+                {%- if cart.taxes_included or shop.shipping_policy.body != blank -%}
+                  <p class="product__tax">
+                    {%- if cart.taxes_included -%}{{ 'products.product.include_taxes' | t }}{%- endif -%}
+                    {%- if shop.shipping_policy.body != blank %}
+                      {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url -}}
+                    {%- endif -%}
+                  </p>
+                {%- endif -%}
+              </div>
+
+            {%- when 'care_summary' -%}
+              {%- liquid
+                assign difficulty = plant.difficulty.value
+                assign light = plant.light.value
+                assign trap = plant.trap_type.value
+              -%}
+              {%- if difficulty != blank or light != blank or trap != blank -%}
+                <ul class="glance" role="list" {{ block.shopify_attributes }}>
+                  {%- if difficulty != blank -%}
+                    <li class="glance__item">
+                      <span class="glance__key">{{ 'products.care.difficulty' | t }}</span>
+                      {% render 'difficulty-meter', difficulty: difficulty %}
+                    </li>
+                  {%- endif -%}
+                  {%- if light != blank -%}
+                    <li class="glance__item">
+                      <span class="glance__key">{{ 'products.care.light' | t }}</span>
+                      <span class="glance__value">{% render 'icon', icon: 'sun' %}{{ light }}</span>
+                    </li>
+                  {%- endif -%}
+                  {%- if trap != blank -%}
+                    <li class="glance__item">
+                      <span class="glance__key">{{ 'products.care.trap_type' | t }}</span>
+                      <span class="glance__value">{% render 'icon', icon: 'trap' %}{{ trap }}</span>
+                    </li>
+                  {%- endif -%}
+                </ul>
+              {%- endif -%}
+
+            {%- when 'variant_picker' -%}
+              {%- unless product.has_only_default_variant -%}
+                <variant-picker
+                  class="variant-picker"
+                  data-swap-id="picker-{{ section.id }}"
+                  data-section-id="{{ section.id }}"
+                  {{ block.shopify_attributes }}
+                >
+                  {%- for option in product.options_with_values -%}
+                    {%- assign option_index = forloop.index0 -%}
+                    <fieldset class="variant-picker__option">
+                      <legend class="variant-picker__legend">
+                        {{ option.name | escape }}: <span>{{ option.selected_value | escape }}</span>
+                      </legend>
+                      <div class="pills">
+                        {%- for value in option.values -%}
+                          {%- assign input_id = 'Option-' | append: section.id | append: '-' | append: option_index | append: '-' | append: forloop.index0 -%}
+                          <input
+                            class="pill__input visually-hidden"
+                            type="radio"
+                            id="{{ input_id }}"
+                            name="option-{{ section.id }}-{{ option_index }}"
+                            value="{{ value | escape }}"
+                            data-option-index="{{ option_index }}"
+                            {% if value.selected %}checked{% endif %}
+                          >
+                          <label for="{{ input_id }}" class="pill{% unless value.available %} is-unavailable{% endunless %}">
+                            {{- value | escape -}}
+                            {%- unless value.available -%}
+                              <span class="visually-hidden">{{ 'products.product.unavailable_option' | t }}</span>
+                            {%- endunless -%}
+                          </label>
+                        {%- endfor -%}
+                      </div>
+                    </fieldset>
+                  {%- endfor -%}
+                  <script type="application/json" data-variants>
+                    [
+                      {%- for variant in product.variants -%}
+                        { "id": {{ variant.id }}, "options": {{ variant.options | json }}, "available": {{ variant.available | json }} }{% unless forloop.last %},{% endunless %}
+                      {%- endfor -%}
+                    ]
+                  </script>
+                </variant-picker>
+              {%- endunless -%}
+
+            {%- when 'inventory' -%}
+              <div class="inventory" data-swap-id="inventory-{{ section.id }}" {{ block.shopify_attributes }}>
+                {%- liquid
+                  assign qty = current_variant.inventory_quantity
+                  assign tracked = false
+                  if current_variant.inventory_management == 'shopify'
+                    assign tracked = true
+                  endif
+                -%}
+                {%- if current_variant.available == false -%}
+                  <p class="inventory__status inventory__status--out">{{ 'products.inventory.out_of_stock' | t }}</p>
+                {%- elsif tracked and qty <= 0 -%}
+                  <p class="inventory__status inventory__status--low">{{ 'products.inventory.backorder' | t }}</p>
+                {%- elsif tracked and qty <= block.settings.low_stock_threshold -%}
+                  <p class="inventory__status inventory__status--low">{{ 'products.inventory.low_stock' | t: count: qty }}</p>
+                {%- else -%}
+                  <p class="inventory__status inventory__status--in">{{ 'products.inventory.in_stock' | t }}</p>
+                {%- endif -%}
+              </div>
+
+            {%- when 'buy_buttons' -%}
+              <div class="product__buy" {{ block.shopify_attributes }}>
+                <product-form data-section-id="{{ section.id }}">
+                  {%- form 'product', product, id: form_id, class: 'product-form', novalidate: 'novalidate' -%}
+                    <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-input>
+                    <div class="product-form__row">
+                      {%- if block.settings.show_quantity -%}
+                        <quantity-input class="qty">
+                          <button type="button" name="minus" aria-label="{{ 'products.product.quantity.decrease' | t }}">
+                            {%- render 'icon', icon: 'minus' -%}
+                          </button>
+                          <input
+                            type="number"
+                            name="quantity"
+                            id="Quantity-{{ section.id }}"
+                            value="1"
+                            min="1"
+                            aria-label="{{ 'products.product.quantity.label' | t }}"
+                          >
+                          <button type="button" name="plus" aria-label="{{ 'products.product.quantity.increase' | t }}">
+                            {%- render 'icon', icon: 'plus' -%}
+                          </button>
+                        </quantity-input>
+                      {%- endif -%}
+                      <button
+                        type="submit"
+                        name="add"
+                        class="btn btn--primary btn--full product-form__submit"
+                        data-swap-id="add-{{ section.id }}"
+                        {% unless current_variant.available %}disabled{% endunless %}
+                      >
+                        <span class="btn__label">
+                          {%- if current_variant.available -%}
+                            {{ 'products.product.add_to_cart' | t }}
+                          {%- else -%}
+                            {{ 'products.product.sold_out' | t }}
+                          {%- endif -%}
+                        </span>
+                        <span class="btn__spinner" aria-hidden="true"></span>
+                      </button>
+                    </div>
+                    {%- if block.settings.show_dynamic_checkout -%}
+                      <div class="product-form__dynamic">{{ form | payment_button }}</div>
+                    {%- endif -%}
+                    <p class="form-error" role="alert" hidden></p>
+                  {%- endform -%}
+                </product-form>
+              </div>
+
+            {%- when 'dispatch' -%}
+              {%- if is_live_plant -%}
+                <div {{ block.shopify_attributes }}>
+                  {% render 'dispatch-notice', compact: block.settings.compact %}
+                </div>
+              {%- endif -%}
+
+            {%- when 'dormancy' -%}
+              {%- if in_dormancy and plant.needs_dormancy.value == true -%}
+                <div class="notice notice--info" {{ block.shopify_attributes }}>
+                  {%- render 'icon', icon: 'moon' -%}
+                  <p>{{ settings.dormancy_notice }}</p>
+                </div>
+              {%- endif -%}
+
+            {%- when 'description' -%}
+              {%- if product.description != blank -%}
+                <div class="product__description rte" {{ block.shopify_attributes }}>
+                  {{ product.description }}
+                </div>
+              {%- endif -%}
+
+            {%- when 'care_card' -%}
+              <div {{ block.shopify_attributes }}>
+                {% render 'care-card', product: product, heading: block.settings.heading %}
+              </div>
+
+            {%- when 'collapsible_tab' -%}
+              <details class="accordion__item" {{ block.shopify_attributes }}>
+                <summary class="accordion__summary">
+                  <span class="accordion__title">
+                    {%- if block.settings.icon != 'none' -%}{%- render 'icon', icon: block.settings.icon -%}{%- endif -%}
+                    {{ block.settings.heading | escape }}
+                  </span>
+                  {%- render 'icon', icon: 'plus' -%}
+                </summary>
+                <div class="accordion__content rte">
+                  {{ block.settings.content }}
+                  {{ block.settings.page.content }}
+                </div>
+              </details>
+
+            {%- when 'share' -%}
+              {%- assign share_url = request.origin | append: product.url -%}
+              <share-button class="share" {{ block.shopify_attributes }}>
+                <span class="share__label">{{ 'products.product.share' | t }}</span>
+                <a
+                  class="share__link"
+                  href="https://wa.me/?text={{ product.title | append: ' ' | append: share_url | url_encode }}"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  {%- render 'icon', icon: 'whatsapp' -%}
+                  <span class="visually-hidden">WhatsApp</span>
+                </a>
+                <a
+                  class="share__link"
+                  href="https://www.facebook.com/sharer/sharer.php?u={{ share_url | url_encode }}"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  {%- render 'icon', icon: 'facebook' -%}
+                  <span class="visually-hidden">Facebook</span>
+                </a>
+                <button type="button" class="share__link" data-copy-url="{{ share_url }}">
+                  <span data-copy-label>{{ 'products.product.copy_link' | t }}</span>
+                </button>
+              </share-button>
+
+            {%- when 'custom_liquid' -%}
+              <div {{ block.shopify_attributes }}>{{ block.settings.custom_liquid }}</div>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </product-info>
+  </div>
+</div>
+
+{%- comment -%} Structured data {%- endcomment -%}
+{%- liquid
+  assign seo_media = product.featured_media
+  assign price_valid_until = 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d'
+-%}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": {{ product.title | json }},
+    "url": {{ request.origin | append: product.url | json }},
+    {%- if seo_media %}
+      "image": [{{ seo_media | image_url: width: 1200 | prepend: 'https:' | json }}],
+    {%- endif %}
+    "description": {{ product.description | strip_html | strip_newlines | truncate: 500 | json }},
+    {%- if botanical != blank %}
+      "alternateName": {{ botanical | json }},
+    {%- endif %}
+    {%- if product.vendor %}
+      "brand": { "@type": "Brand", "name": {{ product.vendor | json }} },
+    {%- endif %}
+    {%- if current_variant.sku != blank %}
+      "sku": {{ current_variant.sku | json }},
+    {%- endif %}
+    "offers": [
+      {%- for variant in product.variants -%}
+        {
+          "@type": "Offer",
+          {%- if variant.sku != blank %}"sku": {{ variant.sku | json }},{% endif %}
+          "name": {{ variant.title | json }},
+          "availability": "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+          "price": {{ variant.price | divided_by: 100.0 | json }},
+          "priceCurrency": {{ cart.currency.iso_code | json }},
+          "priceValidUntil": {{ price_valid_until | json }},
+          "url": {{ request.origin | append: variant.url | json }}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product information",
+  "tag": "section",
+  "class": "section-main-product",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "surface", "label": "Light surface" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Text block"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "options": [
+            { "value": "body", "label": "Body" },
+            { "value": "eyebrow", "label": "Eyebrow" }
+          ],
+          "default": "eyebrow"
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "Title & botanical name",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1
+    },
+    {
+      "type": "care_summary",
+      "name": "Care at a glance",
+      "limit": 1
+    },
+    {
+      "type": "variant_picker",
+      "name": "Variant picker",
+      "limit": 1
+    },
+    {
+      "type": "inventory",
+      "name": "Stock status",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "low_stock_threshold",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "label": "Low stock warning at",
+          "default": 3
+        }
+      ]
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_quantity",
+          "label": "Show quantity selector",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "label": "Show dynamic checkout buttons",
+          "info": "Express checkout buttons for supported payment methods.",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "dispatch",
+      "name": "Live plant dispatch",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Only shows on products tagged as live plants (Theme settings → Live plant shipping)."
+        },
+        {
+          "type": "checkbox",
+          "id": "compact",
+          "label": "Hide shipping note",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "dormancy",
+      "name": "Dormancy notice",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Shows during dormancy season on products where the plant.needs_dormancy metafield is true."
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1
+    },
+    {
+      "type": "care_card",
+      "name": "Care card",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Care sheet"
+        }
+      ]
+    },
+    {
+      "type": "collapsible_tab",
+      "name": "Collapsible tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Collapsible tab"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "truck", "label": "Delivery" },
+            { "value": "shield", "label": "Guarantee" },
+            { "value": "water", "label": "Water" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "info", "label": "Info" }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "Content from page"
+        }
+      ]
+    },
+    {
+      "type": "share",
+      "name": "Share",
+      "limit": 1
+    },
+    {
+      "type": "custom_liquid",
+      "name": "Custom Liquid",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "Liquid code"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

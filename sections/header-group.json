@@ -1,0 +1,37 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "blocks": {
+        "shipping": {
+          "type": "announcement",
+          "settings": {
+            "text": "Free courier delivery on orders over R900"
+          }
+        },
+        "dispatch": {
+          "type": "announcement",
+          "settings": {
+            "text": "Live plants ship Monday–Wednesday — never stuck in a depot over the weekend"
+          }
+        }
+      },
+      "block_order": ["shipping", "dispatch"],
+      "settings": {
+        "color_scheme": "dark",
+        "interval": 5
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "menu": "main-menu",
+        "sticky": true,
+        "color_scheme": "light"
+      }
+    }
+  },
+  "order": ["announcement", "header"]
+}

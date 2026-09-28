@@ -1,0 +1,94 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "color_scheme": "light",
+        "padding_top": 48,
+        "padding_bottom": 32
+      }
+    },
+    "week": {
+      "type": "shipping-calendar",
+      "blocks": {
+        "weather": {
+          "type": "fact",
+          "settings": {
+            "icon": "thermometer",
+            "heading": "Heatwave & cold-snap holds",
+            "text": "<p>If extreme weather is forecast on your route, we hold your order and let you know — your plant's health comes first.</p>"
+          }
+        },
+        "pickup": {
+          "type": "fact",
+          "settings": {
+            "icon": "map-pin",
+            "heading": "Door or pickup point",
+            "text": "<p>Choose courier delivery to your door, or collect from a pickup point or locker near you at checkout.</p>"
+          }
+        },
+        "dormant": {
+          "type": "fact",
+          "settings": {
+            "icon": "moon",
+            "heading": "Winter shipments",
+            "text": "<p>From about May to August, temperate plants ship dormant — small and low, sometimes with blackened leaves. That's normal; they regrow in spring.</p>"
+          }
+        },
+        "promise": {
+          "type": "fact",
+          "settings": {
+            "icon": "shield",
+            "heading": "Arrive-alive promise",
+            "text": "<p>If a plant arrives damaged, send us a photo within 48 hours of delivery and we'll replace or refund it.</p>"
+          }
+        }
+      },
+      "block_order": ["weather", "pickup", "dormant", "promise"],
+      "settings": {
+        "eyebrow": "Live plant delivery",
+        "heading": "Our dispatch week",
+        "text": "<p>Plants leave the nursery early in the week and reach main centres in 1–3 working days. Regional areas can take a little longer.</p>",
+        "color_scheme": "surface",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "cost": {
+          "type": "question",
+          "settings": {
+            "question": "How much is delivery?",
+            "answer": "<p>Rates are calculated at checkout based on your address and parcel size. Orders over the free-shipping threshold ship free to main centres.</p>"
+          }
+        },
+        "track": {
+          "type": "question",
+          "settings": {
+            "question": "How do I track my order?",
+            "answer": "<p>You'll get a tracking link by email (and SMS where available) as soon as your parcel leaves the nursery.</p>"
+          }
+        },
+        "away": {
+          "type": "question",
+          "settings": {
+            "question": "What if I'm not home?",
+            "answer": "<p>Choose a pickup point or locker at checkout if nobody will be home during the day — plants shouldn't spend extra nights in transit.</p>"
+          }
+        }
+      },
+      "block_order": ["cost", "track", "away"],
+      "settings": {
+        "eyebrow": "Delivery questions",
+        "heading": "Good to know",
+        "enable_schema": true,
+        "color_scheme": "light",
+        "padding_top": 64,
+        "padding_bottom": 80
+      }
+    }
+  },
+  "order": ["main", "week", "faq"]
+}

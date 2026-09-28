@@ -1,0 +1,99 @@
+<div
+  class="section scheme-{{ section.settings.color_scheme }}"
+  style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="container">
+    <header class="page-header">
+      <div class="page-header__text">
+        <h1 class="h1">{{ section.settings.title | default: page_title | escape }}</h1>
+      </div>
+    </header>
+
+    <ul class="grid grid--tiles" role="list" style="--cols: {{ section.settings.columns }};">
+      {%- for collection in collections -%}
+        {%- if collection.products_count > 0 -%}
+          <li class="collection-tile">
+            <div class="collection-tile__media media" style="--ratio: 0.8;">
+              {%- if collection.featured_image -%}
+                {{
+                  collection.featured_image
+                  | image_url: width: 900
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '300, 450, 600, 900',
+                    sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw',
+                    alt: collection.title
+                }}
+              {%- else -%}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </div>
+            <div class="collection-tile__info">
+              <h2 class="collection-tile__title">
+                <a href="{{ collection.url }}" class="collection-tile__link">{{ collection.title | escape }}</a>
+              </h2>
+              <p class="collection-tile__count">{{ 'sections.collection_list.count' | t: count: collection.products_count }}</p>
+            </div>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collections list",
+  "tag": "section",
+  "class": "section-main-list-collections",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Browse the collection"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Columns on desktop",
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "surface", "label": "Light surface" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ]
+}
+{% endschema %}

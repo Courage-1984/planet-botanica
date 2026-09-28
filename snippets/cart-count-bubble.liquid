@@ -1,0 +1,9 @@
+{%- comment -%}
+  Cart count badge. Re-rendered through the `cart-count` section after cart changes.
+{%- endcomment -%}
+<span class="cart-count" data-render-section="cart-count">
+  {%- if cart.item_count > 0 -%}
+    <span class="cart-count__bubble" aria-hidden="true">{{ cart.item_count | at_most: 99 }}</span>
+  {%- endif -%}
+  <span class="visually-hidden">{{ 'general.cart.item_count' | t: count: cart.item_count }}</span>
+</span>
