@@ -64,6 +64,7 @@ The store's data model and setup: see [`setup/README.md`](setup/README.md).
 
 ## Handover docs
 
+- [`docs/scope-and-quote.md`](docs/scope-and-quote.md) — the R15,000 scope, price breakdown and "delivered against this quote" status (snapshot of the [live Claude Doc](https://claude.ai/code/artifact/ad5de08a-1782-4c67-8b1d-10003bf11e21))
 - [`docs/client-guide.md`](docs/client-guide.md) — for the shop owner: adding plants and care data, writing News posts and care guides, menus, dispatch pause, theme settings, filters and quiz
 - [`setup/README.md`](setup/README.md) — store setup script, filters, metafield reference, menu tree
 - [`docs/sa-launch-checklist.md`](docs/sa-launch-checklist.md) — payments, couriers, VAT, POPIA, ECT Act, permits, QA
