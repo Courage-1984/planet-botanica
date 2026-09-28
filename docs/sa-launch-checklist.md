@@ -98,6 +98,8 @@ Every app adds monthly cost and page weight. Recommended launch stack:
 
 - [ ] Catalogue moved to the client's store (store transfer, or `setup/setup-store.mjs` + product CSV export/import) — see `setup/README.md`.
 - [ ] Every plant has: product type = genus, Latin name, difficulty, trap type, climate (temperature group), light, water and at least two photos. Kits without a Latin name carry the `live-plant` tag.
+- [ ] **⚖ confirm photo rights.** Several current product photos look like they came from Wikimedia Commons (e.g. the Venus flytrap collage, the seedling close-up), plus public-domain botanical plates. Commons photos are often CC BY-SA and need a visible credit. Get licences confirmed with credits added, or replace them with the nursery's own photography.
+- [ ] **Confirm prices.** Beginner plants are currently R15–R38 (e.g. *Utricularia bisquamata* R15, a Venus flytrap seedling R38) while some Nepenthes are R1,450–R8,500. Check the low end isn't placeholder data.
 - [ ] Test orders to Cape Town, Johannesburg, Durban and one rural postal code; check rates and delivery estimates.
 - [ ] Filters + plant-finder quiz return sensible results.
 - [ ] Mobile pass: iPhone Safari and a mid-range Android (most SA traffic is mobile, often on data — keep images compressed).
