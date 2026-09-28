@@ -4,8 +4,8 @@
 {%- endcomment -%}
 
 {%- liquid
-  assign difficulty = product.metafields.plant.difficulty.value
-  assign trap = product.metafields.plant.trap_type.value
+  assign difficulty = product.metafields.custom.difficulty.value
+  assign trap = product.metafields.custom.trap_type.value
 -%}
 
 {%- if difficulty != blank or trap != blank -%}
@@ -14,7 +14,7 @@
       <li>{% render 'difficulty-meter', difficulty: difficulty %}</li>
     {%- endif -%}
     {%- if trap != blank -%}
-      <li class="care-badges__trap">{{ trap }}</li>
+      <li class="care-badges__trap">{% render 'trap-label', trap: trap %}</li>
     {%- endif -%}
   </ul>
 {%- endif -%}

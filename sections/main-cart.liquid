@@ -1,7 +1,7 @@
 {%- liquid
   assign has_live_plant = false
   for item in cart.items
-    if item.product.tags contains settings.plant_tag
+    if item.product.metafields.custom.latin_name != blank or item.product.tags contains settings.plant_tag
       assign has_live_plant = true
       break
     endif

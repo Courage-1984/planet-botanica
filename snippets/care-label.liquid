@@ -1,18 +1,19 @@
 {%- comment -%}
-  Translated label for a plant.* care metafield key.
+  Translated label for a custom.* care metafield key.
   Accepts: key (String)
 {%- endcomment -%}
 {%- case key -%}
-  {%- when 'light' -%}{{ 'products.care.light' | t }}
-  {%- when 'water' -%}{{ 'products.care.water' | t }}
-  {%- when 'soil' -%}{{ 'products.care.soil' | t }}
-  {%- when 'humidity' -%}{{ 'products.care.humidity' | t }}
-  {%- when 'temperature' -%}{{ 'products.care.temperature' | t }}
-  {%- when 'dormancy' -%}{{ 'products.care.dormancy' | t }}
+  {%- when 'lux_requirements' -%}{{ 'products.care.light' | t }}
+  {%- when 'water_requirements' -%}{{ 'products.care.water' | t }}
+  {%- when 'potting_media' -%}{{ 'products.care.substrate' | t }}
+  {%- when 'humidity_min' -%}{{ 'products.care.humidity' | t }}
+  {%- when 'temp_range' -%}{{ 'products.care.temperature' | t }}
+  {%- when 'temperature_group' -%}{{ 'products.care.climate' | t }}
+  {%- when 'dormancy_required' -%}{{ 'products.care.dormancy' | t }}
   {%- when 'trap_type' -%}{{ 'products.care.trap_type' | t }}
-  {%- when 'pot_size' -%}{{ 'products.care.pot_size' | t }}
-  {%- when 'mature_size' -%}{{ 'products.care.mature_size' | t }}
-  {%- when 'origin' -%}{{ 'products.care.origin' | t }}
-  {%- when 'environment' -%}{{ 'products.care.environment' | t }}
+  {%- when 'origin_location' -%}{{ 'products.care.origin' | t }}
+  {%- when 'origin_altitude' -%}{{ 'products.care.altitude' | t }}
+  {%- when 'growth_speed' -%}{{ 'products.care.growth' | t }}
+  {%- when 'clonotype_code' -%}{{ 'products.care.clone' | t }}
   {%- else -%}{{ key | replace: '_', ' ' | capitalize }}
 {%- endcase -%}

@@ -1,21 +1,24 @@
 {%- comment -%}
-  Three-dot difficulty meter.
-  Accepts: difficulty (string) — "Beginner", "Intermediate" or "Advanced"
+  Three-dot difficulty meter from the custom.difficulty metafield (1–5).
+  1–2 → Easy, 3 → Intermediate, 4–5 → Expert (matches the store's "Level:" tags).
+  Accepts: difficulty (Number 1–5)
 {%- endcomment -%}
 
 {%- liquid
-  assign level = 0
-  assign d = difficulty | downcase
-  if d contains 'beginner' or d contains 'easy'
+  assign score = difficulty | plus: 0
+  if score <= 2
     assign level = 1
-  elsif d contains 'intermediate' or d contains 'moderate'
+    assign label = 'products.difficulty.easy' | t
+  elsif score == 3
     assign level = 2
-  elsif d contains 'advanced' or d contains 'expert'
+    assign label = 'products.difficulty.intermediate' | t
+  else
     assign level = 3
+    assign label = 'products.difficulty.expert' | t
   endif
 -%}
 
-<span class="difficulty difficulty--{{ level }}">
+<span class="difficulty difficulty--{{ level }}" title="{{ 'products.difficulty.score' | t: score: score }}">
   <span class="difficulty__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-  <span class="difficulty__label">{{ difficulty }}</span>
+  <span class="difficulty__label">{{ label }}</span>
 </span>

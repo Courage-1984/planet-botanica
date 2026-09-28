@@ -87,16 +87,43 @@
       "difficulty": "Difficulty",
       "light": "Light",
       "water": "Water",
-      "soil": "Soil",
+      "substrate": "Substrate",
       "humidity": "Humidity",
       "temperature": "Temperature",
+      "climate": "Climate",
       "dormancy": "Dormancy",
+      "dormancy_yes": "Required — cool winter rest (about Jun–Aug)",
+      "dormancy_no": "Not needed — grows all year",
       "trap_type": "Trap",
-      "pot_size": "Supplied as",
-      "mature_size": "Mature size",
       "origin": "Native to",
-      "environment": "Grows best",
+      "altitude": "Altitude",
+      "growth": "Growth rate",
+      "clone": "Clone ID",
+      "cites": "CITES",
+      "cites_short": "CITES listed",
+      "cites_note": "This species is listed under CITES. Nursery-propagated plants may be sold within South Africa; export needs permits.",
       "read_guide": "Read the full care guide"
+    },
+    "difficulty": {
+      "easy": "Easy",
+      "intermediate": "Intermediate",
+      "expert": "Expert",
+      "score": "Difficulty {{ score }} of 5"
+    },
+    "traps": {
+      "snap": "Snap trap",
+      "pitfall": "Pitfall",
+      "flypaper": "Flypaper",
+      "suction": "Suction (bladder)",
+      "lobster_pot": "Lobster-pot"
+    },
+    "climate": {
+      "highland": "Highland — cool nights",
+      "intermediate": "Intermediate",
+      "lowland": "Lowland — warm & humid",
+      "temperate": "Temperate — outdoors",
+      "tropical": "Tropical",
+      "mediterranean": "Mediterranean — dry summers"
     },
     "dispatch": {
       "days": "Live plants dispatch {{ days }}",

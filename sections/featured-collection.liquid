@@ -1,8 +1,14 @@
 {%- liquid
   assign collection = section.settings.collection
   assign limit = section.settings.products_to_show
+  assign has_products = false
+  if collection != blank and collection.products_count > 0
+    assign has_products = true
+  endif
 -%}
 
+{%- comment -%} Placeholders only in the theme editor; an empty section stays hidden on the live store. {%- endcomment -%}
+{%- if has_products or request.design_mode -%}
 <div
   class="section scheme-{{ section.settings.color_scheme }}"
   style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;"
@@ -30,7 +36,7 @@
       role="list"
       style="--cols: {{ section.settings.columns }};"
     >
-      {%- if collection != blank and collection.products_count > 0 -%}
+      {%- if has_products -%}
         {%- for product in collection.products limit: limit -%}
           <li>{% render 'product-card', card_product: product, section_id: section.id %}</li>
         {%- endfor -%}
@@ -53,6 +59,7 @@
     </ul>
   </div>
 </div>
+{%- endif -%}
 
 {% schema %}
 {

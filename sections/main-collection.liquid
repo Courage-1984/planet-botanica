@@ -1,5 +1,5 @@
 {%- paginate collection.products by section.settings.products_per_page -%}
-  {%- assign care_guide = collection.metafields.plant.care_guide.value -%}
+  {%- assign care_guide = collection.metafields.custom.care_guide_link.value -%}
 
   <div
     class="section scheme-{{ section.settings.color_scheme }}"

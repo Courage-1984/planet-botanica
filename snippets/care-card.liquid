@@ -1,22 +1,27 @@
 {%- comment -%}
-  Herbarium-label style care card built from plant.* metafields.
-  Accepts: product (Object), heading (string, optional)
+  Herbarium-label style care card built from custom.* metafields.
+  Accepts: product (Object), heading (String, optional)
 {%- endcomment -%}
 
 {%- liquid
-  assign plant = product.metafields.plant
-  assign botanical = plant.botanical_name.value
+  assign plant = product.metafields.custom
+  assign latin = plant.latin_name.value
   assign difficulty = plant.difficulty.value
-  assign environment = plant.environment.value
-  assign care_guide = plant.care_guide.value
+  assign climate = plant.temperature_group.value
+  assign dormancy = plant.dormancy_required.value
+  assign cites = plant.cites_listed.value
+  assign guide = plant.care_guide
 
   assign card_heading = heading
   if card_heading == blank
     assign card_heading = 'products.care.heading' | t
   endif
 
-  assign care_keys = 'light:sun,water:water,soil:soil,humidity:humidity,temperature:thermometer,dormancy:moon' | split: ','
-  assign specimen_keys = 'trap_type:trap,pot_size:soil,mature_size:ruler,origin:globe' | split: ','
+  comment
+    key:icon pairs — text metafields shown as-is, in this order.
+  endcomment
+  assign care_keys = 'lux_requirements:sun,water_requirements:water,potting_media:soil,humidity_min:humidity,temp_range:thermometer' | split: ','
+  assign specimen_keys = 'origin_location:globe,origin_altitude:ruler,growth_speed:leaf,clonotype_code:info' | split: ','
 
   assign has_care = false
   for pair in care_keys
@@ -26,25 +31,33 @@
       break
     endif
   endfor
+  if climate != blank or dormancy != nil
+    assign has_care = true
+  endif
 -%}
 
-{%- if has_care or botanical != blank or difficulty != blank -%}
+{%- if has_care or latin != blank or difficulty != blank -%}
   <section class="care-card" aria-labelledby="CareCard-{{ product.id }}">
     <header class="care-card__header">
       <p class="eyebrow">{{ card_heading }}</p>
       <h2 id="CareCard-{{ product.id }}" class="care-card__title">
-        {%- if botanical != blank -%}
-          <em>{{ botanical }}</em>
+        {%- if latin != blank -%}
+          <em>{{ latin }}</em>
         {%- else -%}
           {{ product.title }}
         {%- endif -%}
       </h2>
-      {%- if difficulty != blank -%}
-        <div class="care-card__difficulty">
-          <span class="care-card__key">{{ 'products.care.difficulty' | t }}</span>
-          {% render 'difficulty-meter', difficulty: difficulty %}
-        </div>
-      {%- endif -%}
+      <div class="care-card__meta">
+        {%- if difficulty != blank -%}
+          <span class="care-card__difficulty">
+            <span class="care-card__key">{{ 'products.care.difficulty' | t }}</span>
+            {% render 'difficulty-meter', difficulty: difficulty %}
+          </span>
+        {%- endif -%}
+        {%- if cites == true -%}
+          <span class="badge badge--highlight" title="{{ 'products.care.cites_note' | t }}">{{ 'products.care.cites' | t }}</span>
+        {%- endif -%}
+      </div>
     </header>
 
     {%- if has_care -%}
@@ -65,10 +78,45 @@
             </div>
           {%- endif -%}
         {%- endfor -%}
+
+        {%- if climate != blank -%}
+          <div class="care-card__row">
+            <dt>
+              {%- render 'icon', icon: 'globe' -%}
+              <span class="care-card__key">{% render 'care-label', key: 'temperature_group' %}</span>
+            </dt>
+            <dd>{% render 'climate-label', climate: climate %}</dd>
+          </div>
+        {%- endif -%}
+
+        {%- if dormancy != nil -%}
+          <div class="care-card__row">
+            <dt>
+              {%- render 'icon', icon: 'moon' -%}
+              <span class="care-card__key">{% render 'care-label', key: 'dormancy_required' %}</span>
+            </dt>
+            <dd>
+              {%- if dormancy -%}
+                {{ 'products.care.dormancy_yes' | t }}
+              {%- else -%}
+                {{ 'products.care.dormancy_no' | t }}
+              {%- endif -%}
+            </dd>
+          </div>
+        {%- endif -%}
       </dl>
     {%- endif -%}
 
     <dl class="care-card__specimen">
+      {%- if plant.trap_type.value != blank -%}
+        <div class="care-card__row care-card__row--compact">
+          <dt>
+            {%- render 'icon', icon: 'trap' -%}
+            <span class="care-card__key">{% render 'care-label', key: 'trap_type' %}</span>
+          </dt>
+          <dd>{% render 'trap-label', trap: plant.trap_type.value %}</dd>
+        </div>
+      {%- endif -%}
       {%- for pair in specimen_keys -%}
         {%- liquid
           assign parts = pair | split: ':'
@@ -81,26 +129,20 @@
               {%- render 'icon', icon: parts[1] -%}
               <span class="care-card__key">{% render 'care-label', key: key %}</span>
             </dt>
-            <dd>{{ value }}</dd>
+            <dd{% if key == 'clonotype_code' %} class="care-card__code"{% endif %}>{{ value }}</dd>
           </div>
         {%- endif -%}
       {%- endfor -%}
-      {%- if environment != blank -%}
-        <div class="care-card__row care-card__row--compact">
-          <dt>
-            {%- render 'icon', icon: 'leaf' -%}
-            <span class="care-card__key">{{ 'products.care.environment' | t }}</span>
-          </dt>
-          <dd>{{ environment | join: ', ' }}</dd>
-        </div>
-      {%- endif -%}
     </dl>
 
-    {%- if care_guide != blank -%}
-      <a class="care-card__guide link-arrow" href="{{ care_guide }}">
-        {{- 'products.care.read_guide' | t -}}
-        {%- render 'icon', icon: 'arrow-right' -%}
-      </a>
+    {%- if guide != blank -%}
+      <details class="care-card__guide">
+        <summary class="link-arrow">
+          {{- 'products.care.read_guide' | t -}}
+          {%- render 'icon', icon: 'chevron-down' -%}
+        </summary>
+        <div class="rte care-card__guide-body">{{ guide | metafield_tag }}</div>
+      </details>
     {%- endif -%}
   </section>
 {%- endif -%}

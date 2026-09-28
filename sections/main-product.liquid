@@ -1,10 +1,11 @@
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
   assign featured_media = current_variant.featured_media | default: product.featured_media
-  assign plant = product.metafields.plant
-  assign botanical = plant.botanical_name.value
+  assign plant = product.metafields.custom
+  assign botanical = plant.latin_name.value
+  assign climate = plant.temperature_group.value
   assign is_live_plant = false
-  if product.tags contains settings.plant_tag
+  if botanical != blank or product.tags contains settings.plant_tag
     assign is_live_plant = true
   endif
   assign form_id = 'ProductForm-' | append: section.id
@@ -119,10 +120,15 @@
 
             {%- when 'title' -%}
               <div class="product__heading" {{ block.shopify_attributes }}>
-                {%- if botanical != blank -%}
-                  <p class="product__botanical">{{ botanical }}</p>
+                {%- if product.type != blank or climate != blank -%}
+                  <p class="product__eyebrow eyebrow">
+                    {{- product.type -}}
+                    {%- if product.type != blank and climate != blank %} · {% endif -%}
+                    {%- if climate != blank -%}{% render 'climate-label', climate: climate %}{%- endif -%}
+                  </p>
                 {%- endif -%}
                 <h1 class="product__title h1">{{ product.title | escape }}</h1>
+                {% render 'product-caption', product: product, mode: 'latin', class: 'product__botanical' %}
               </div>
 
             {%- when 'price' -%}
@@ -141,10 +147,10 @@
             {%- when 'care_summary' -%}
               {%- liquid
                 assign difficulty = plant.difficulty.value
-                assign light = plant.light.value
+                assign light = plant.lux_requirements.value
                 assign trap = plant.trap_type.value
               -%}
-              {%- if difficulty != blank or light != blank or trap != blank -%}
+              {%- if difficulty != blank or light != blank or trap != blank or plant.cites_listed.value == true -%}
                 <ul class="glance" role="list" {{ block.shopify_attributes }}>
                   {%- if difficulty != blank -%}
                     <li class="glance__item">
@@ -161,7 +167,13 @@
                   {%- if trap != blank -%}
                     <li class="glance__item">
                       <span class="glance__key">{{ 'products.care.trap_type' | t }}</span>
-                      <span class="glance__value">{% render 'icon', icon: 'trap' %}{{ trap }}</span>
+                      <span class="glance__value">{% render 'icon', icon: 'trap' %}{% render 'trap-label', trap: trap %}</span>
+                    </li>
+                  {%- endif -%}
+                  {%- if plant.cites_listed.value == true -%}
+                    <li class="glance__item">
+                      <span class="glance__key">{{ 'products.care.cites' | t }}</span>
+                      <span class="glance__value">{% render 'icon', icon: 'shield' %}{{ 'products.care.cites_short' | t }}</span>
                     </li>
                   {%- endif -%}
                 </ul>
@@ -290,7 +302,7 @@
               {%- endif -%}
 
             {%- when 'dormancy' -%}
-              {%- if in_dormancy and plant.needs_dormancy.value == true -%}
+              {%- if in_dormancy and plant.dormancy_required.value == true -%}
                 <div class="notice notice--info" {{ block.shopify_attributes }}>
                   {%- render 'icon', icon: 'moon' -%}
                   <p>{{ settings.dormancy_notice }}</p>
@@ -468,7 +480,7 @@
     },
     {
       "type": "title",
-      "name": "Title & botanical name",
+      "name": "Title & Latin name",
       "limit": 1
     },
     {
@@ -529,7 +541,7 @@
       "settings": [
         {
           "type": "paragraph",
-          "content": "Only shows on products tagged as live plants (Theme settings → Live plant shipping)."
+          "content": "Only shows on live plants: products with a Latin name, or tagged as set in Theme settings → Live plant shipping."
         },
         {
           "type": "checkbox",
@@ -546,7 +558,7 @@
       "settings": [
         {
           "type": "paragraph",
-          "content": "Shows during dormancy season on products where the plant.needs_dormancy metafield is true."
+          "content": "Shows during dormancy season on products where the custom.dormancy_required metafield is true."
         }
       ]
     },

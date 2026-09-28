@@ -1,0 +1,13 @@
+{%- comment -%}
+  Readable label for the custom.temperature_group metafield.
+  Accepts: climate (String) — highland, intermediate, lowland, temperate, tropical, mediterranean
+{%- endcomment -%}
+{%- case climate -%}
+  {%- when 'highland' -%}{{ 'products.climate.highland' | t }}
+  {%- when 'intermediate' -%}{{ 'products.climate.intermediate' | t }}
+  {%- when 'lowland' -%}{{ 'products.climate.lowland' | t }}
+  {%- when 'temperate' -%}{{ 'products.climate.temperate' | t }}
+  {%- when 'tropical' -%}{{ 'products.climate.tropical' | t }}
+  {%- when 'mediterranean' -%}{{ 'products.climate.mediterranean' | t }}
+  {%- else -%}{{ climate | capitalize }}
+{%- endcase -%}

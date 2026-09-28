@@ -13,7 +13,7 @@
         "text": "<p>Venus flytraps, sundews, pitcher plants and more — grown on rainwater, hardened for our climate and delivered to your door.</p>",
         "button_label": "Shop all plants",
         "button_label_2": "Beginner-friendly plants",
-        "button_link_2": "/collections/beginner-friendly"
+        "button_link_2": "/collections/coll-beginners"
       }
     },
     "genera": {
@@ -21,38 +21,38 @@
       "blocks": {
         "dionaea": {
           "type": "collection",
-          "settings": { "caption": "Dionaea", "title": "Venus flytraps" }
+          "settings": { "collection": "dionaea", "caption": "Dionaea", "title": "Venus flytraps" }
         },
         "drosera": {
           "type": "collection",
-          "settings": { "caption": "Drosera", "title": "Sundews" }
+          "settings": { "collection": "drosera", "caption": "Drosera", "title": "Sundews" }
         },
         "sarracenia": {
           "type": "collection",
-          "settings": { "caption": "Sarracenia", "title": "Trumpet pitchers" }
+          "settings": { "collection": "sarracenia", "caption": "Sarracenia", "title": "Trumpet pitchers" }
         },
         "nepenthes": {
           "type": "collection",
-          "settings": { "caption": "Nepenthes", "title": "Tropical pitchers" }
+          "settings": { "collection": "nepenthes", "caption": "Nepenthes", "title": "Tropical pitchers" }
         },
         "pinguicula": {
           "type": "collection",
-          "settings": { "caption": "Pinguicula", "title": "Butterworts" }
+          "settings": { "collection": "pinguicula", "caption": "Pinguicula", "title": "Butterworts" }
         },
         "utricularia": {
           "type": "collection",
-          "settings": { "caption": "Utricularia", "title": "Bladderworts" }
+          "settings": { "collection": "utricularia", "caption": "Utricularia", "title": "Bladderworts" }
         },
-        "rarities": {
+        "heliamphora": {
           "type": "collection",
-          "settings": { "caption": "Cephalotus · Heliamphora", "title": "Collector's corner" }
+          "settings": { "collection": "heliamphora", "caption": "Heliamphora", "title": "Sun pitchers" }
         },
-        "supplies": {
+        "cephalotus": {
           "type": "collection",
-          "settings": { "caption": "Soil · pots · kits", "title": "Growing supplies" }
+          "settings": { "collection": "cephalotus", "caption": "Cephalotus", "title": "Albany pitchers" }
         }
       },
-      "block_order": ["dionaea", "drosera", "sarracenia", "nepenthes", "pinguicula", "utricularia", "rarities", "supplies"],
+      "block_order": ["dionaea", "drosera", "sarracenia", "nepenthes", "pinguicula", "utricularia", "heliamphora", "cephalotus"],
       "settings": {
         "eyebrow": "Shop by genus",
         "heading": "Meet the carnivores",
@@ -69,6 +69,7 @@
       "settings": {
         "eyebrow": "Fresh from the bog",
         "heading": "Beginner favourites",
+        "collection": "coll-beginners",
         "products_to_show": 8,
         "columns": 4,
         "layout": "carousel",
@@ -84,35 +85,35 @@
         "where": {
           "type": "question",
           "settings": {
-            "question": "Where will your plant live?",
-            "filter": "environment",
-            "option_1_label": "A sunny windowsill",
-            "option_1_value": "Windowsill",
+            "question": "Where will your plant grow?",
+            "param": "filter.p.m.custom.temperature_group",
+            "option_1_label": "A sunny spot outdoors",
+            "option_1_value": "temperate",
             "option_1_icon": "sun",
-            "option_2_label": "Outdoors — patio or garden",
-            "option_2_value": "Outdoors",
-            "option_2_icon": "leaf",
-            "option_3_label": "A terrarium",
-            "option_3_value": "Terrarium",
+            "option_2_label": "A warm, bright windowsill",
+            "option_2_value": "lowland|tropical|intermediate",
+            "option_2_icon": "thermometer",
+            "option_3_label": "A cool, humid terrarium",
+            "option_3_value": "highland",
             "option_3_icon": "humidity",
-            "option_4_label": "A greenhouse",
-            "option_4_value": "Greenhouse",
-            "option_4_icon": "thermometer"
+            "option_4_label": "A dry, sunny patio",
+            "option_4_value": "mediterranean",
+            "option_4_icon": "leaf"
           }
         },
         "experience": {
           "type": "question",
           "settings": {
             "question": "How green are your thumbs?",
-            "filter": "difficulty",
+            "param": "filter.p.m.custom.difficulty",
             "option_1_label": "This is my first carnivore",
-            "option_1_value": "Beginner",
+            "option_1_value": "1..2",
             "option_1_icon": "soil",
             "option_2_label": "I've kept a few alive",
-            "option_2_value": "Beginner|Intermediate",
+            "option_2_value": "1..3",
             "option_2_icon": "leaf",
             "option_3_label": "Seasoned grower — challenge me",
-            "option_3_value": "Intermediate|Advanced",
+            "option_3_value": "3..5",
             "option_3_icon": "shield",
             "option_4_icon": "none"
           }
@@ -121,15 +122,15 @@
           "type": "question",
           "settings": {
             "question": "Which trap fascinates you most?",
-            "filter": "trap_type",
+            "param": "filter.p.m.custom.trap_type",
             "option_1_label": "Snapping jaws",
-            "option_1_value": "Snap trap",
+            "option_1_value": "snap",
             "option_1_icon": "trap",
             "option_2_label": "Glistening sticky dew",
-            "option_2_value": "Flypaper",
+            "option_2_value": "flypaper",
             "option_2_icon": "water",
             "option_3_label": "Pitchers & pitfalls",
-            "option_3_value": "Pitfall",
+            "option_3_value": "pitfall|lobster-pot",
             "option_3_icon": "humidity",
             "option_4_label": "Surprise me",
             "option_4_icon": "leaf"

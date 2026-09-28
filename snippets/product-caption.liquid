@@ -1,0 +1,33 @@
+{%- comment -%}
+  One-line caption under/over a product name, from custom.* metafields.
+  Titles usually start with the Latin name already, so the Latin name only shows
+  when the title doesn't contain it.
+  Accepts:
+  - product: {Object}
+  - mode: {String} 'auto' (Latin name, else origin) | 'latin' (Latin name only, when not in title) | 'origin' | 'none'
+  - class: {String} element class
+{%- endcomment -%}
+
+{%- liquid
+  assign latin = product.metafields.custom.latin_name.value
+  assign origin = product.metafields.custom.origin_location.value
+  assign caption = blank
+  assign is_latin = false
+
+  if mode != 'origin' and mode != 'none' and latin != blank
+    unless product.title contains latin
+      assign caption = latin
+      assign is_latin = true
+    endunless
+  endif
+
+  if caption == blank
+    if mode == 'auto' or mode == 'origin'
+      assign caption = origin
+    endif
+  endif
+-%}
+
+{%- if caption != blank -%}
+  <p class="{{ class }}{% if is_latin %} is-latin{% endif %}">{{ caption }}</p>
+{%- endif -%}

@@ -1,0 +1,12 @@
+{%- comment -%}
+  Readable label for the custom.trap_type metafield.
+  Accepts: trap (String) — snap, pitfall, flypaper, suction, lobster-pot
+{%- endcomment -%}
+{%- case trap -%}
+  {%- when 'snap' -%}{{ 'products.traps.snap' | t }}
+  {%- when 'pitfall' -%}{{ 'products.traps.pitfall' | t }}
+  {%- when 'flypaper' -%}{{ 'products.traps.flypaper' | t }}
+  {%- when 'suction' -%}{{ 'products.traps.suction' | t }}
+  {%- when 'lobster-pot' -%}{{ 'products.traps.lobster_pot' | t }}
+  {%- else -%}{{ trap | replace: '-', ' ' | capitalize }}
+{%- endcase -%}

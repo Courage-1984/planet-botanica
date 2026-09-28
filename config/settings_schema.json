@@ -213,11 +213,17 @@
         "default": true
       },
       {
-        "type": "checkbox",
-        "id": "card_show_botanical",
-        "label": "Show botanical name",
-        "info": "From the plant.botanical_name metafield.",
-        "default": true
+        "type": "select",
+        "id": "card_caption",
+        "label": "Caption under the name",
+        "options": [
+          { "value": "auto", "label": "Latin name, else origin" },
+          { "value": "latin", "label": "Latin name only" },
+          { "value": "origin", "label": "Origin only" },
+          { "value": "none", "label": "None" }
+        ],
+        "default": "auto",
+        "info": "From the custom.latin_name and custom.origin_location metafields. The Latin name is skipped when the product title already contains it."
       },
       {
         "type": "checkbox",
@@ -239,12 +245,13 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "Products tagged with the tag below show dispatch information on the product page and in the cart."
+        "content": "Products with a Latin name (custom.latin_name) are live plants and show dispatch information on the product page and in the cart."
       },
       {
         "type": "text",
         "id": "plant_tag",
-        "label": "Live plant product tag",
+        "label": "Extra live-plant tag",
+        "info": "Optional. Tag products without a Latin name (e.g. starter kits) to show dispatch information too.",
         "default": "live-plant"
       },
       {

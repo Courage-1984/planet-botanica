@@ -19,35 +19,35 @@
         "where": {
           "type": "question",
           "settings": {
-            "question": "Where will your plant live?",
-            "filter": "environment",
-            "option_1_label": "A sunny windowsill",
-            "option_1_value": "Windowsill",
+            "question": "Where will your plant grow?",
+            "param": "filter.p.m.custom.temperature_group",
+            "option_1_label": "A sunny spot outdoors",
+            "option_1_value": "temperate",
             "option_1_icon": "sun",
-            "option_2_label": "Outdoors — patio or garden",
-            "option_2_value": "Outdoors",
-            "option_2_icon": "leaf",
-            "option_3_label": "A terrarium",
-            "option_3_value": "Terrarium",
+            "option_2_label": "A warm, bright windowsill",
+            "option_2_value": "lowland|tropical|intermediate",
+            "option_2_icon": "thermometer",
+            "option_3_label": "A cool, humid terrarium",
+            "option_3_value": "highland",
             "option_3_icon": "humidity",
-            "option_4_label": "A greenhouse",
-            "option_4_value": "Greenhouse",
-            "option_4_icon": "thermometer"
+            "option_4_label": "A dry, sunny patio",
+            "option_4_value": "mediterranean",
+            "option_4_icon": "leaf"
           }
         },
         "experience": {
           "type": "question",
           "settings": {
             "question": "How green are your thumbs?",
-            "filter": "difficulty",
+            "param": "filter.p.m.custom.difficulty",
             "option_1_label": "This is my first carnivore",
-            "option_1_value": "Beginner",
+            "option_1_value": "1..2",
             "option_1_icon": "soil",
             "option_2_label": "I've kept a few alive",
-            "option_2_value": "Beginner|Intermediate",
+            "option_2_value": "1..3",
             "option_2_icon": "leaf",
             "option_3_label": "Seasoned grower — challenge me",
-            "option_3_value": "Intermediate|Advanced",
+            "option_3_value": "3..5",
             "option_3_icon": "shield",
             "option_4_icon": "none"
           }

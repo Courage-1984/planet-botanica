@@ -1,113 +1,55 @@
 {
-  "_comment": "Plant-care metafield definitions used by the theme. Created by setup/setup-store.mjs, or by hand in Settings → Custom data → Products. Choice lists power the storefront filters and the plant-finder quiz — keep values identical to the quiz option values.",
+  "_comment": "Care-data metafield definitions the theme reads (namespace: custom). Identical to the development store's definitions, so products exported from it import cleanly into a fresh store. Created by setup/setup-store.mjs, or by hand in Settings → Custom data. Choice lists must stay identical to the plant-finder quiz option values.",
   "product": [
-    {
-      "key": "botanical_name",
-      "name": "Botanical name",
-      "type": "single_line_text_field",
-      "description": "Latin name incl. cultivar, e.g. Dionaea muscipula 'B52'. Shown in italics on cards and the product page."
-    },
+    { "key": "latin_name", "name": "Latin name", "type": "single_line_text_field", "description": "Shown under the title when the title doesn't already contain it." },
+    { "key": "common_name", "name": "Common name", "type": "single_line_text_field" },
+    { "key": "genus", "name": "Genus", "type": "single_line_text_field" },
     {
       "key": "difficulty",
-      "name": "Difficulty",
+      "name": "Difficulty (1 easy – 5 expert)",
+      "type": "number_integer",
+      "min": 1,
+      "max": 5,
+      "description": "1–2 = Easy, 3 = Intermediate, 4–5 = Expert. Drives the difficulty meter, filters and quiz.",
+      "filter": true
+    },
+    {
+      "key": "temperature_group",
+      "name": "Temperature group",
       "type": "single_line_text_field",
-      "choices": ["Beginner", "Intermediate", "Advanced"],
+      "choices": ["highland", "intermediate", "lowland", "temperate", "tropical", "mediterranean"],
       "filter": true
     },
     {
       "key": "trap_type",
       "name": "Trap type",
       "type": "single_line_text_field",
-      "choices": ["Snap trap", "Flypaper", "Pitfall", "Bladder", "Lobster-pot"],
+      "choices": ["snap", "pitfall", "flypaper", "suction", "lobster-pot"],
       "filter": true
     },
+    { "key": "dormancy_required", "name": "Dormancy required", "type": "boolean", "description": "Shows the winter-dormancy notice on the product page in season." },
+    { "key": "cites_listed", "name": "CITES listed", "type": "boolean" },
     {
-      "key": "light",
-      "name": "Light",
+      "key": "supply_category",
+      "name": "Supply category",
       "type": "single_line_text_field",
-      "choices": ["Full sun", "Bright indirect", "Partial shade"],
-      "filter": true
+      "choices": ["soil", "pot", "water", "lighting", "climate", "tool", "seed", "book-gift"]
     },
-    {
-      "key": "environment",
-      "name": "Grows best",
-      "type": "list.single_line_text_field",
-      "choices": ["Windowsill", "Outdoors", "Terrarium", "Greenhouse"],
-      "filter": true
-    },
-    {
-      "key": "humidity",
-      "name": "Humidity",
-      "type": "single_line_text_field",
-      "choices": ["Low", "Medium", "High"]
-    },
-    {
-      "key": "water",
-      "name": "Water",
-      "type": "multi_line_text_field",
-      "description": "e.g. Rain, distilled or RO water only. Tray method, 1–2 cm deep."
-    },
-    {
-      "key": "soil",
-      "name": "Soil",
-      "type": "single_line_text_field",
-      "description": "e.g. 1:1 peat & perlite. Never fertilise."
-    },
-    {
-      "key": "temperature",
-      "name": "Temperature",
-      "type": "single_line_text_field",
-      "description": "e.g. 2–35 °C"
-    },
-    {
-      "key": "dormancy",
-      "name": "Dormancy",
-      "type": "single_line_text_field",
-      "description": "e.g. Required — cool winter rest, Jun–Aug"
-    },
-    {
-      "key": "needs_dormancy",
-      "name": "Needs winter dormancy",
-      "type": "boolean",
-      "description": "Shows the dormancy-season notice on the product page (Theme settings → Live plant shipping)."
-    },
-    {
-      "key": "pot_size",
-      "name": "Supplied as",
-      "type": "single_line_text_field",
-      "description": "e.g. 9 cm pot, mature"
-    },
-    {
-      "key": "mature_size",
-      "name": "Mature size",
-      "type": "single_line_text_field"
-    },
-    {
-      "key": "origin",
-      "name": "Native to",
-      "type": "single_line_text_field"
-    },
-    {
-      "key": "care_guide",
-      "name": "Care guide link",
-      "type": "url",
-      "description": "Link to the matching care-guide blog post."
-    }
+    { "key": "care_guide", "name": "Care guide", "type": "rich_text_field", "description": "Long-form care notes; expandable at the bottom of the care card." },
+    { "key": "water_requirements", "name": "Water", "type": "multi_line_text_field" },
+    { "key": "origin_location", "name": "Origin", "type": "single_line_text_field" },
+    { "key": "origin_altitude", "name": "Altitude", "type": "single_line_text_field" },
+    { "key": "humidity_min", "name": "Humidity", "type": "single_line_text_field" },
+    { "key": "temp_range", "name": "Temperature range", "type": "single_line_text_field" },
+    { "key": "potting_media", "name": "Substrate", "type": "single_line_text_field" },
+    { "key": "clonotype_code", "name": "Clone ID", "type": "single_line_text_field" },
+    { "key": "growth_speed", "name": "Growth rate", "type": "single_line_text_field" },
+    { "key": "lux_requirements", "name": "Light", "type": "single_line_text_field" }
   ],
   "collection": [
-    {
-      "key": "care_guide",
-      "name": "Care guide link",
-      "type": "url",
-      "description": "Shown under the collection title, e.g. the Venus flytrap care guide."
-    }
+    { "key": "care_guide_link", "name": "Care guide link", "type": "single_line_text_field", "description": "Path or URL shown under the collection title, e.g. /blogs/care-guides/venus-flytrap-care" }
   ],
   "article": [
-    {
-      "key": "related_products",
-      "name": "Plants in this guide",
-      "type": "list.product_reference",
-      "description": "Adds a 'Plants in this guide' product row under the article."
-    }
+    { "key": "related_products", "name": "Plants in this guide", "type": "list.product_reference", "description": "Adds a 'Plants in this guide' product row under the article." }
   ]
 }

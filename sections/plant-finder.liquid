@@ -1,9 +1,10 @@
 {%- comment -%}
-  "Find your carnivore" quiz. Each question block maps to a plant.* metafield
-  filter; answers become storefront filter params on the target collection, e.g.
-  /collections/live-plants?filter.p.m.plant.difficulty=Beginner
+  "Find your carnivore" quiz. Each question block names a storefront filter
+  parameter; answers become filter params on the target collection, e.g.
+  /collections/all?filter.p.m.custom.trap_type=snap&filter.p.m.custom.difficulty.lte=2
   Requires those metafields to be enabled as filters in Search & Discovery.
-  Option values: use | for several values (Beginner|Intermediate); leave blank for "any".
+  Option values: | for several values (lowland|tropical), min..max for a number
+  range (1..2), blank for "any".
 {%- endcomment -%}
 
 {%- liquid
@@ -39,7 +40,7 @@
           </ol>
 
           {%- for block in section.blocks -%}
-            {%- assign param = 'filter.p.m.plant.' | append: block.settings.filter -%}
+            {%- assign param = block.settings.param | strip -%}
             <fieldset class="finder__step{% if forloop.first %} is-active{% endif %}" data-step="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
               <legend class="finder__question">
                 <span class="finder__count">{{ forloop.index }} / {{ forloop.length }}</span>
@@ -187,28 +188,22 @@
           "type": "text",
           "id": "question",
           "label": "Question",
-          "default": "Where will your plant live?"
+          "default": "Where will your plant grow?"
         },
         {
-          "type": "select",
-          "id": "filter",
-          "label": "Filters by",
-          "options": [
-            { "value": "environment", "label": "Growing spot (plant.environment)" },
-            { "value": "difficulty", "label": "Difficulty (plant.difficulty)" },
-            { "value": "trap_type", "label": "Trap type (plant.trap_type)" },
-            { "value": "light", "label": "Light (plant.light)" },
-            { "value": "humidity", "label": "Humidity (plant.humidity)" }
-          ],
-          "default": "environment"
+          "type": "text",
+          "id": "param",
+          "label": "Filter parameter",
+          "default": "filter.p.m.custom.temperature_group",
+          "info": "filter.p.m.<namespace>.<key> for a product metafield, e.g. filter.p.m.custom.trap_type"
         },
         {
           "type": "paragraph",
-          "content": "Values must match the metafield choices exactly. Separate several with | and leave blank for 'any'."
+          "content": "Values must match the metafield values exactly. Separate several with |, use 1..2 for a number range, and leave blank for 'any'."
         },
         { "type": "header", "content": "Option 1" },
-        { "type": "text", "id": "option_1_label", "label": "Label", "default": "A sunny windowsill" },
-        { "type": "text", "id": "option_1_value", "label": "Value", "default": "Windowsill" },
+        { "type": "text", "id": "option_1_label", "label": "Label", "default": "A sunny spot outdoors" },
+        { "type": "text", "id": "option_1_value", "label": "Value", "default": "temperate" },
         {
           "type": "select",
           "id": "option_1_icon",
@@ -229,8 +224,8 @@
           "default": "sun"
         },
         { "type": "header", "content": "Option 2" },
-        { "type": "text", "id": "option_2_label", "label": "Label", "default": "Outdoors — patio or garden" },
-        { "type": "text", "id": "option_2_value", "label": "Value", "default": "Outdoors" },
+        { "type": "text", "id": "option_2_label", "label": "Label", "default": "A warm, bright windowsill" },
+        { "type": "text", "id": "option_2_value", "label": "Value", "default": "lowland|tropical|intermediate" },
         {
           "type": "select",
           "id": "option_2_icon",
@@ -248,11 +243,11 @@
             { "value": "shield", "label": "Shield" },
             { "value": "globe", "label": "Globe" }
           ],
-          "default": "leaf"
+          "default": "thermometer"
         },
         { "type": "header", "content": "Option 3" },
-        { "type": "text", "id": "option_3_label", "label": "Label", "default": "A terrarium" },
-        { "type": "text", "id": "option_3_value", "label": "Value", "default": "Terrarium" },
+        { "type": "text", "id": "option_3_label", "label": "Label", "default": "A cool, humid terrarium" },
+        { "type": "text", "id": "option_3_value", "label": "Value", "default": "highland" },
         {
           "type": "select",
           "id": "option_3_icon",
@@ -305,24 +300,24 @@
         {
           "type": "question",
           "settings": {
-            "option_4_label": "A greenhouse",
-            "option_4_value": "Greenhouse",
-            "option_4_icon": "thermometer"
+            "option_4_label": "A dry, sunny patio",
+            "option_4_value": "mediterranean",
+            "option_4_icon": "leaf"
           }
         },
         {
           "type": "question",
           "settings": {
             "question": "How green are your thumbs?",
-            "filter": "difficulty",
+            "param": "filter.p.m.custom.difficulty",
             "option_1_label": "This is my first carnivore",
-            "option_1_value": "Beginner",
+            "option_1_value": "1..2",
             "option_1_icon": "soil",
             "option_2_label": "I've kept a few alive",
-            "option_2_value": "Beginner|Intermediate",
+            "option_2_value": "1..3",
             "option_2_icon": "leaf",
             "option_3_label": "Seasoned grower — challenge me",
-            "option_3_value": "Intermediate|Advanced",
+            "option_3_value": "3..5",
             "option_3_icon": "shield"
           }
         },
@@ -330,15 +325,15 @@
           "type": "question",
           "settings": {
             "question": "Which trap fascinates you most?",
-            "filter": "trap_type",
+            "param": "filter.p.m.custom.trap_type",
             "option_1_label": "Snapping jaws",
-            "option_1_value": "Snap trap",
+            "option_1_value": "snap",
             "option_1_icon": "trap",
             "option_2_label": "Glistening sticky dew",
-            "option_2_value": "Flypaper",
+            "option_2_value": "flypaper",
             "option_2_icon": "water",
             "option_3_label": "Pitchers & pitfalls",
-            "option_3_value": "Pitfall",
+            "option_3_value": "pitfall|lobster-pot",
             "option_3_icon": "humidity",
             "option_4_label": "Surprise me",
             "option_4_icon": "leaf"

@@ -1,4 +1,4 @@
-{%- assign related_products = article.metafields.plant.related_products.value -%}
+{%- assign related_products = article.metafields.custom.related_products.value -%}
 
 <article class="section scheme-{{ section.settings.color_scheme }}" style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;">
   <div class="container container--narrow">
@@ -140,7 +140,7 @@
     },
     {
       "type": "paragraph",
-      "content": "Link plants to a guide with the article metafield plant.related_products to show a 'Plants in this guide' row."
+      "content": "Link plants to a guide with the article metafield custom.related_products to show a 'Plants in this guide' row."
     },
     {
       "type": "select",

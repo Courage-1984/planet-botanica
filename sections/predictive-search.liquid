@@ -22,11 +22,15 @@
                   {%- endif -%}
                 </span>
                 <span class="predictive-item__text">
-                  {%- assign botanical = product.metafields.plant.botanical_name.value -%}
-                  {%- if botanical != blank -%}
-                    <span class="predictive-item__botanical">{{ botanical }}</span>
-                  {%- endif -%}
                   <span class="predictive-item__title">{{ product.title | escape }}</span>
+                  {%- assign origin = product.metafields.custom.origin_location.value -%}
+                  {%- if origin != blank or product.type != blank -%}
+                    <span class="predictive-item__botanical">
+                      {{- product.type -}}
+                      {%- if product.type != blank and origin != blank %} · {% endif -%}
+                      {{- origin -}}
+                    </span>
+                  {%- endif -%}
                 </span>
                 <span class="predictive-item__price">{{ product.price | money }}</span>
               </a>

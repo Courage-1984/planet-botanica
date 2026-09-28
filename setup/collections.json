@@ -1,0 +1,23 @@
+{
+  "_comment": "Smart collections the theme's templates and menus link to — identical handles and rules to the development store. Genus collections match on product type; curated ones on tags. 'metafield' rules match a custom.* metafield value.",
+  "collections": [
+    { "handle": "dionaea", "title": "Venus flytraps", "rules": [{ "column": "TYPE", "condition": "Dionaea" }], "care_guide_link": "/blogs/care-guides/venus-flytrap-care", "description": "<p><em>Dionaea muscipula</em> — the snap-trap icon. Full sun, rainwater and a cool winter rest are all they ask.</p>" },
+    { "handle": "drosera", "title": "Sundews", "rules": [{ "column": "TYPE", "condition": "Drosera" }], "care_guide_link": "/blogs/care-guides/cape-sundew-care", "description": "<p><em>Drosera</em> — glittering sticky tentacles that curl around their prey. Several of the world's easiest sundews are South African.</p>" },
+    { "handle": "sarracenia", "title": "Trumpet pitchers", "rules": [{ "column": "TYPE", "condition": "Sarracenia" }], "description": "<p><em>Sarracenia</em> — tall, veined pitchers for sunny patios and bog gardens.</p>" },
+    { "handle": "nepenthes", "title": "Tropical pitchers", "rules": [{ "column": "TYPE", "condition": "Nepenthes" }], "description": "<p><em>Nepenthes</em> — hanging pitchers from the tropics, grouped by the climate they need.</p>" },
+    { "handle": "nepenthes-highland", "title": "Highland Nepenthes", "rules": [{ "column": "TYPE", "condition": "Nepenthes" }, { "metafield": "temperature_group", "condition": "highland" }] },
+    { "handle": "nepenthes-intermediate", "title": "Intermediate Nepenthes", "rules": [{ "column": "TYPE", "condition": "Nepenthes" }, { "metafield": "temperature_group", "condition": "intermediate" }] },
+    { "handle": "nepenthes-lowland", "title": "Lowland Nepenthes", "rules": [{ "column": "TYPE", "condition": "Nepenthes" }, { "metafield": "temperature_group", "condition": "lowland" }] },
+    { "handle": "pinguicula", "title": "Butterworts", "rules": [{ "column": "TYPE", "condition": "Pinguicula" }], "description": "<p><em>Pinguicula</em> — jewel-like rosettes that quietly clear fungus gnats from a windowsill.</p>" },
+    { "handle": "utricularia", "title": "Bladderworts", "rules": [{ "column": "TYPE", "condition": "Utricularia" }], "description": "<p><em>Utricularia</em> — tiny underground vacuum traps and flowers that steal the show.</p>" },
+    { "handle": "heliamphora", "title": "Sun pitchers", "rules": [{ "column": "TYPE", "condition": "Heliamphora" }], "description": "<p><em>Heliamphora</em> — pitchers from the misty tabletop mountains of South America.</p>" },
+    { "handle": "cephalotus", "title": "Albany pitchers", "rules": [{ "column": "TYPE", "condition": "Cephalotus" }], "description": "<p><em>Cephalotus follicularis</em> — tiny, toothy pitchers from south-western Australia.</p>" },
+    { "handle": "darlingtonia", "title": "Cobra lilies", "rules": [{ "column": "TYPE", "condition": "Darlingtonia" }] },
+    { "handle": "byblis", "title": "Rainbow plants", "rules": [{ "column": "TYPE", "condition": "Byblis" }] },
+    { "handle": "drosophyllum", "title": "Dewy pines", "rules": [{ "column": "TYPE", "condition": "Drosophyllum" }] },
+    { "handle": "growing-supplies", "title": "Growing supplies", "rules": [{ "column": "TYPE", "condition": "Growing supplies" }], "description": "<p>Mineral-free soil, pots and kits — everything a carnivore needs, nothing it doesn't.</p>" },
+    { "handle": "coll-beginners", "title": "Beginner-friendly", "rules": [{ "column": "TAG", "condition": "Coll: Beginners" }, { "column": "TAG", "condition": "Easy" }], "disjunctive": true, "description": "<p>Forgiving, fast-growing carnivores that thrive on a sunny windowsill or patio. The best place to start.</p>" },
+    { "handle": "coll-rare-species", "title": "Rare species", "rules": [{ "column": "TAG", "condition": "Coll: Rare Species" }, { "column": "TAG", "condition": "Rare" }], "disjunctive": true, "description": "<p>Collector plants and named clones for experienced growers.</p>" },
+    { "handle": "coll-tropicals", "title": "Tropicals", "rules": [{ "column": "TAG", "condition": "Coll: Tropicals" }], "description": "<p>No winter rest needed — warm, humid growers for windowsills and terrariums.</p>" }
+  ]
+}

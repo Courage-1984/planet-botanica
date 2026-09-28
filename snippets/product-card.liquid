@@ -11,7 +11,6 @@
   assign variant = card_product.selected_or_first_available_variant
   assign image = card_product.featured_media.preview_image
   assign second_image = card_product.media[1].preview_image
-  assign botanical = card_product.metafields.plant.botanical_name.value
   assign image_alt = image.alt | default: card_product.title | escape
   assign tag = heading_level | default: 'h3'
 
@@ -74,13 +73,11 @@
   </div>
 
   <div class="product-card__info">
-    {%- if settings.card_show_botanical and botanical != blank -%}
-      <p class="product-card__botanical">{{ botanical }}</p>
-    {%- endif -%}
-
     <{{ tag }} class="product-card__title">
       <a href="{{ card_product.url }}" class="product-card__link">{{ card_product.title | escape }}</a>
     </{{ tag }}>
+
+    {% render 'product-caption', product: card_product, mode: settings.card_caption, class: 'product-card__caption' %}
 
     {%- if settings.card_show_care -%}
       {% render 'care-badges', product: card_product %}

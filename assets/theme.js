@@ -764,14 +764,19 @@
     onSubmit(event) {
       event.preventDefault();
       if (!this.hasAnswer()) return this.showError();
-      // Expand "Beginner|Intermediate" into repeated filter params; drop blank ("any") answers.
+      // "lowland|tropical" → repeated params; "1..2" → .gte/.lte range params; blank ("any") → dropped.
       const params = new URLSearchParams();
       this.form.querySelectorAll('input:checked').forEach((input) => {
         input.value
           .split('|')
           .map((value) => value.trim())
           .filter(Boolean)
-          .forEach((value) => params.append(input.name, value));
+          .forEach((value) => {
+            const range = value.match(/^(-?[\d.]+)?\.\.(-?[\d.]+)?$/);
+            if (!range) return params.append(input.name, value);
+            if (range[1] !== undefined) params.set(`${input.name}.gte`, range[1]);
+            if (range[2] !== undefined) params.set(`${input.name}.lte`, range[2]);
+          });
       });
       const query = params.toString();
       window.location.href = this.form.action + (query ? `?${query}` : '');

@@ -1,5 +1,13 @@
-{%- assign blog = section.settings.blog -%}
+{%- liquid
+  assign blog = section.settings.blog
+  assign has_articles = false
+  if blog != blank and blog.articles_count > 0
+    assign has_articles = true
+  endif
+-%}
 
+{%- comment -%} Placeholders only in the theme editor; an empty section stays hidden on the live store. {%- endcomment -%}
+{%- if has_articles or request.design_mode -%}
 <div
   class="section scheme-{{ section.settings.color_scheme }}"
   style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;"
@@ -23,7 +31,7 @@
     </div>
 
     <ul class="grid grid--scroll" role="list" style="--cols: 3;">
-      {%- if blog != blank and blog.articles_count > 0 -%}
+      {%- if has_articles -%}
         {%- for article in blog.articles limit: section.settings.post_limit -%}
           <li>{% render 'article-card', article: article, show_excerpt: section.settings.show_excerpt %}</li>
         {%- endfor -%}
@@ -44,6 +52,7 @@
     </ul>
   </div>
 </div>
+{%- endif -%}
 
 {% schema %}
 {

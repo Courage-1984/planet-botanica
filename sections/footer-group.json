@@ -16,14 +16,14 @@
           "type": "menu",
           "settings": {
             "heading": "Shop",
-            "menu": "footer"
+            "menu": "main-menu"
           }
         },
         "help": {
           "type": "menu",
           "settings": {
             "heading": "Help",
-            "menu": "customer-care"
+            "menu": "footer"
           }
         },
         "contact": {
